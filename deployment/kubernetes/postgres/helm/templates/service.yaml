@@ -1,0 +1,11 @@
+# kubernetes/postgres-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Values.app.name }}
+  ports:
+    - port: {{ .Values.app.port }}

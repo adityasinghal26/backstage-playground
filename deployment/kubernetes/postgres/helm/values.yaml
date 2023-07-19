@@ -1,0 +1,15 @@
+namespace: 'backstage'
+deployment:
+  replicas: '1'
+
+app:
+  name: 'postgres'
+  port: '5432'
+
+container:
+  name: 'postgres'
+  port: '5432'
+
+postgres:
+  username: 'YmFja3N0YWdl'
+  password: 'aHVudGVyMg=='
