@@ -12,7 +12,8 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
-  baseUrl: http://localhost:80
+  # baseUrl: http://localhost:80
+  baseUrl: https://adityasinghal26-devcontainer-name-8000.preview.app.github.dev
   listen:
     port: 7007
     # Uncomment the following host directive to bind to specific interfaces
