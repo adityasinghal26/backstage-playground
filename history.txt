@@ -1,0 +1,163 @@
+    1  NPM
+    2  npm
+    3  yarn
+    4  cd backstage-app/backstage101/
+    5  yarn dev
+    6  yarn install
+    7  kubectl config get-contexts
+    8  kubectl create ns backstage
+    9  cd ../../deployment/kubernetes/
+   10  ll
+   11  ls 
+   12  cd backstage/
+   13  ls
+   14  ls -l
+   15  cd templates/
+   16  ll
+   17  ls -l
+   18  cd ../../
+   19  cd ../postgres/
+   20  helm
+   21  helm list
+   22  cd helm/
+   23  helm package
+   24  helm package --help
+   25  helm package .
+   26  helm install
+   27  helm install postgres postgres-0.1.0.tgz 
+   28  helm package .
+   29  helm install postgres postgres-0.1.0.tgz 
+   30  helm upgrade --install postgres postgres-0.1.0.tgz 
+   31  helm list
+   32  kubectl -n backstage get app
+   33  kubectl -n backstage get deployment
+   34  kubectl -n backstage get service
+   35  kubectl -n backstage get pod
+   36  kubectl -n backstage get pv
+   37  kubectl -n backstage get pvc
+   38* 
+   39  kubectl -n backstage get pod
+   40  kubectl -n backstage exec -it postgres-59dcf886d8-5xbjv -- bash
+   41  kubectl -n backstage get all
+   42  kubectl -n backstage get cm
+   43  cd ../../
+   44  cd ../..
+   45  helm package deployment/kubernetes/postgres/helm/ 
+   46  base64 
+   47  cd backstage-app/backstage101/
+   48  cd packages/backend/
+   49  yarn install --frozen-lockfile
+   50  cd ../..
+   51  ls -l
+   52  yarn install --frozen-lockfile
+   53  yarn tsc
+   54  cd packages/backend/
+   55  pwd
+   56  ls -l
+   57  yarn build:backend --config ../../app-config.yaml
+   58  yarn build backend --config ../../app-config.yaml
+   59  docker image build . -f packages/backend/Dockerfile --tag backstage:0.1.0
+   60  cd ../..
+   61  docker image build . -f packages/backend/Dockerfile --tag backstage:0.1.0
+   62  docker image ls
+   63  cd ../../
+   64  helm package deployment/kubernetes/backstage/helm/
+   65  helm upgrade --install backstage backstage-0.1.0.tgz 
+   66  helm list
+   67  kubectl -n backstage get all
+   68  minikube docker-env
+   69  cd deployment/docker/registry/
+   70  sh createRegistry.sh 
+   71  kind 
+   72  kind get nodes
+   73  kubectl config get-contexts
+   74  kubectl get nodes
+   75  sh createRegistry.sh 
+   76  kind get node
+   77  kind get nodes
+   78  kind get nodes --name # 5. Document the local registry
+   79  # https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry
+   80  cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: local-registry-hosting
+  namespace: kube-public
+data:
+  localRegistryHosting.v1: |
+    host: "localhost:${reg_port}"
+    help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
+EOF
+
+   81  kubectl -n kube-public get cm
+   82  kubectl -n kube-public delete cm local-registry-hosting 
+   83  kind --help
+   84  kind get --help
+   85  kind get nodes --help
+   86  kind get nodes -n kind-backstage
+   87  kind get nodes -A
+   88  kind get nodes -n kind-backstage
+   89  sh createRegistry.sh 
+   90  docker imag els
+   91  docker image ls
+   92  docker image tag backstage:0.1.0 localhost:5001/backstage:0.1.0
+   93  docker image ls
+   94  docker push localhost:5001/backstage:0.1.0
+   95  history
+   96  cd ../../..
+   97  history
+   98  helm upgrade --install backstage backstage-0.1.0.tgz
+   99  kubectl -n backstage get pods
+  100  kubectl -n backstage delete pod 
+  101  kubectl -n backstage delete pod backstage-87f4c4544-tz5bs
+  102  kubectl -n backstage get pods
+  103  kubectl -n backstage describe pod backstage-87f4c4544-tz5bs
+  104  kubectl -n backstage get pods
+  105  kubectl -n backstage describe pod backstage-87f4c4544-7t45d
+  106  helm package deployment/kubernetes/backstage/helm/
+  107  helm upgrade --install backstage backstage-0.1.0.tgz
+  108  kubectl -n backstage get pods
+  109  kubectl -n backstage describe deployment backstage-56c8d446ff-qskll
+  110  kubectl -n backstage get pods
+  111  kubectl -n backstage describe deployment backstage-56c8d446ff-qskll
+  112  kubectl -n backstage describe pod backstage-56c8d446ff-qskll
+  113  kind get nodes
+  114  kubectl get nodes
+  115  docker exec backstage-56c8d446ff-qskll bash
+  116  docker exec backstage-control-plane bash
+  117  docker exec -it backstage-control-plane bash
+  118  docker container ls -a
+  119  reg_name='kind-registry'
+  120  docker inspect -f='{{json .NetworkSettings.Networks.kind}}' "${reg_name}"
+  121  docker network connect "kind" "${reg_name}"
+  122  helm package deployment/kubernetes/backstage/helm/
+  123  helm upgrade --install backstage backstage-0.1.0.tgz
+  124  kubectl -n backstage get pods
+  125  kubectl -n backstage describe pod backstage-76bbb4dd4f-j297b
+  126  history | grep tag
+  127  history | grep docker
+  128  docker image tag backstage:0.1.0 kind-registry:5000/backstage:0.1.0
+  129  docker push kind-registry:5000/backstage:0.1.0
+  130  docker push http://kind-registry:5000/backstage:0.1.0
+  131  docker push kind-registry:5000/backstage:0.1.0
+  132  docker exec -it backstage-control-plane bash
+  133  kind-registry:5000/backstage:0.1.0
+  134  docker pull kind-registry:5000/backstage:0.1.0
+  135  history | grep yarn
+  136  docker exec -it backstage-control-plane bash
+  137  kind --help
+  138  docker exec -it backstage-control-plane bash
+  139  cd .devcontainer/local/
+  140  cat <<EO >> kind-config.yaml 
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
+    endpoint = ["http://${reg_host}:5000"]
+EOF
+
+
+  141  history > history.txt
+  142  cd ../../
+  143  history > history.txt
