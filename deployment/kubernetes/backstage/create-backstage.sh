@@ -15,7 +15,7 @@ helm -n backstage upgrade --install postgres postgres-0.1.0.tgz
 # Install backend app dependencies using yarn
 cd $CODESPACE_VSCODE_FOLDER/backstage-app/backstage101
 yarn install --frozen-lockfile
-yarn tsc from backstage101 folder
+yarn tsc
 
 # Build backstage backend app with the latest app-config.yaml file
 cd $CODESPACE_VSCODE_FOLDER/backstage-app/backstage101/packages/backend
@@ -32,4 +32,7 @@ docker push localhost:5001/backstage:0.1.0
 # Package backstage helm chart and install the same in backstage namespace
 helm package deployment/kubernetes/backstage/helm/
 helm -n backstage upgrade --install backstage backstage-0.1.0.tgz
+
+# Setup a port-forward from backstage:80 to localhost:8000
+kubectl -n backstage port-forward svc/backstage 8000:80
 
