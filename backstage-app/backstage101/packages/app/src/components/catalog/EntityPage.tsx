@@ -55,6 +55,7 @@ import {
 
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
+import { EntityTodoContent } from '@backstage/plugin-todo';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -164,6 +165,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/todo" title="Todo">
+      <EntityTodoContent />
     </EntityLayout.Route>
   </EntityLayout>
 );

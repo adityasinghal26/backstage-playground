@@ -24,14 +24,14 @@ yarn build backend --config ../../app-config.yaml
 # Build docker image with the latest build backend artefacts
 cd $CODESPACE_VSCODE_FOLDER
 # docker image build . -f packages/backend/Dockerfile --tag backstage:0.1.0 from backstage101 folder
-docker image build backstage-app/backstage101/ -f deployment/kubernetes/backstage/docker/Dockerfile --tag localhost:5001/backstage:0.1.0
+docker image build backstage-app/backstage101/ -f deployment/kubernetes/backstage/docker/Dockerfile --tag localhost:5001/backstage:0.2.0
 
 # Push the latest docker image to local image registry
-docker push localhost:5001/backstage:0.1.0
+docker push localhost:5001/backstage:0.2.0
 
 # Package backstage helm chart and install the same in backstage namespace
 helm package deployment/kubernetes/backstage/helm/
-helm -n backstage upgrade --install backstage backstage-0.1.0.tgz
+helm -n backstage upgrade --install backstage backstage-0.2.0.tgz
 
 # Setup a port-forward from backstage:80 to localhost:8000
 kubectl -n backstage port-forward svc/backstage 8000:80
