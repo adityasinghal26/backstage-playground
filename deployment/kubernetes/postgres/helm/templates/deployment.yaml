@@ -1,22 +1,22 @@
 # kubernetes/postgres.yaml
-apiVersion: apps/v1
+apiVersion: {{ .Values.deployment.apiVersion }}
 kind: Deployment
 metadata:
-  name: {{ .Values.app.name }}
+  name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
+      app: {{ .Values.deployment.name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.app.name }}
+        app: {{ .Values.deployment.name }}
     spec:
       containers:
         - name: {{ .Values.container.name }}
-          image: postgres:13.2-alpine
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: 'IfNotPresent'
           ports:
             - containerPort: {{ .Values.container.port }}
