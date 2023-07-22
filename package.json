@@ -1,0 +1,16 @@
+{
+  "name": "backstage-playground",
+  "version": "0.1.0",
+  "devDependencies": {
+    "auto-changelog": "^2.4.0"
+  },
+  "scripts": {
+    "version": "auto-changelog -p && git add CHANGELOG.md"
+  },
+  "auto-changelog": {
+    "output": "HISTORY.md",
+    "template": "keepachangelog",
+    "unreleased": true,
+    "commitLimit": false
+  }
+}
