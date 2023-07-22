@@ -31,7 +31,7 @@ backend:
   database:
     client: pg
     connection:
-      host: postgres
+      host: postgres.postgres.svc.cluster.local
       port: 5432
       user: backstage
       password: hunter2
