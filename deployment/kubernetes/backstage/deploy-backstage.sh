@@ -19,4 +19,4 @@ helm package deployment/kubernetes/backstage/helm/ --version $BUILD_TAG
 helm -n backstage upgrade --install backstage backstage-$BUILD_TAG.tgz --set image.tag=$BUILD_TAG --create-namespace --wait
 
 # Setup a port-forward from backstage:80 to localhost:8000
-kubectl -n backstage port-forward svc/backstage 8000:80
+# kubectl -n backstage port-forward svc/backstage 8000:80
