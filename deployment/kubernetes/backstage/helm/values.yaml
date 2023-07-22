@@ -1,0 +1,25 @@
+namespace: 'backstage'
+service:
+  apiVersion: 'v1'
+  name: 'backstage'
+  port: '80'
+  targetPort: 'http'
+
+deployment:
+  apiVersion: 'apps/v1'
+  name: 'backstage'
+  replicas: '1'
+
+image:
+  registry: 'localhost:5001'
+  repository: 'backstage'
+  tag: '0.1.0'
+
+container:
+  name: 'backstage'
+  port: '7007'
+
+secrets:
+  backstage: 'backstage-secrets'
+  postgres: 'postgres-secrets'
+  ghToken: 'dummy'

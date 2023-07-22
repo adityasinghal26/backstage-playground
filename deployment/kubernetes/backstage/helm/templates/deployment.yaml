@@ -1,31 +1,31 @@
 # kubernetes/backstage.yaml
-apiVersion: apps/v1
+apiVersion: {{ .Values.deployment.apiVersion }}
 kind: Deployment
 metadata:
-  name: backstage
-  namespace: backstage
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      app: backstage
+      app: {{ .Values.deployment.name }}
   template:
     metadata:
       labels:
-        app: backstage
+        app: {{ .Values.deployment.name }}
     spec:
       containers:
-        - name: backstage
-          image: localhost:5001/backstage:0.2.0
+        - name: {{ .Values.container.name }}
+          image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 7007
+              containerPort: {{ .Values.container.port }}
           envFrom:
             - secretRef:
-                name: postgres-secrets
+                name: {{ .Values.secrets.postgres }}
             - secretRef:
-                name: backstage-secrets
+                name: {{ .Values.secrets.backstage }}
 # Uncomment if health checks are enabled in your app:
 # https://backstage.io/docs/plugins/observability#health-checks
 #          readinessProbe:
