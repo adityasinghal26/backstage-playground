@@ -95,6 +95,12 @@ catalog:
       target: ../../examples/org.yaml
       rules:
         - allow: [User, Group]
+    
+    # All template example
+    - type: file
+      target: ../../examples/all-templates.yaml
+      rules:
+        - allow: [Template]
 
     ## Uncomment these lines to add more example data
     # - type: url
