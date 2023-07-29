@@ -1,0 +1,157 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: example-jhipster-template
+  title: Example JHipster Template
+  description: An example template for the scaffolder that generates a JHipster service as per the input
+spec:
+  owner: user:guest
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Application Name
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          title: Unique name of the application service
+          default: jhipsterSampleApplication
+          ui:autofocus: 'true'
+          ui:options:
+            rows: 5
+    - title: Repository Location
+      description: URL of the repository
+      type: object
+      required:
+      - repoUrl
+      properties:
+        repoUrl:
+          type: string
+          title: Repository Location
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+            - github.com
+    - title: Application Type
+      type: object
+      required:
+      - appType
+      properties:
+        appType:
+          type: string
+          title: Which type of application would you like to create?
+          default: Monolithic Application (recommended for simple projects)
+          ui:widget: select
+          enum:
+          - Monolithic Application (recommended for simple projects)
+          - Microservice Application
+          - Microservice Gateway
+    - title: Server Side Options
+      type: object
+      required:
+      - packageName
+      - serverPort
+      properties:
+        packageName:
+          type: string
+          title: What is your default package name?
+          default: com.mycompany.myapp
+          ui:options:
+            rows: 1
+        serverPort:
+          type: number
+          title: On which port would like your server to run? It should be unique to avoid port conflicts
+          default: 8080
+          maxLength: 4
+          ui:options:
+            rows: 1
+    - title: Client Side Options
+      type: object
+      required:
+      - framework
+      - adminUI
+      properties:
+        framework:
+          type: string
+          title: Which Framework would you like to use for the client?
+          default: Angular
+          ui:widget: select
+          enum:
+          - Angular
+          - React
+          - Vue
+        adminUI:
+          type: boolean
+          title: Do you want to generate the admin UI?
+          default: Yes
+          ui:widget: select
+    - title: Internationalization Options
+      type: object
+      required:
+      - i18nSupport
+      properties:
+        i18nSupport:
+          type: boolean
+          title: Would you like to enable internationalization support?
+          default: Yes
+          ui:widget: select
+    - title: Testing Options
+      type: object
+      required:
+      - testFrameworks
+      properties:
+        testFrameworks:
+          type: array
+          title: Besides JUnit and Jest, which testing frameworks would you like to use?
+          items:
+            type: string
+            enum:
+            - Gatling
+            - Cucumber
+            - Cypress
+            - Protractor (deprecated)
+          uniqueItems: true
+          ui:widget: checkboxes
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          name: ${{ parameters.name }}
+
+    # This step publishes the contents of the working directory to GitHub.
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
+
+    # The final step is to register our new component in the catalog.
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
