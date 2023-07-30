@@ -172,19 +172,27 @@ spec:
       input:
         message: 'Output of jhipster_request getResponse ${{ steps.jhipster_request.output.body }} getCode ${{ steps.jhipster_request.output.code }} getHeader ${{ steps.jhipster_request.output.headers }}'
 
-    - id: save-body
-      name: Save HTTP Response Body
-      action: binary:file:create
+    - id: unzip-file
+      name: Unzip File
+      action: unzip:file:create
       input:
-        contents: '${{ steps.jhipster_request.output.body }}'
-        filename: 'response_body.zip'
+        absoluteFilePath: '/tmp'
+        fileName: 'yourfilenamehere.zip'
+        extractPath: '/tmp'
+
+    #- id: save-body
+    #  name: Save HTTP Response Body
+    #  action: binary:file:create
+    #  input:
+    #    contents: '${{ steps.jhipster_request.output.body }}'
+    #    filename: 'response_body.zip'
 
     - id: fetch-base
       name: Fetch Base
       action: fetch:plain
       input:
-        url: '${{ steps.jhipster_request.output.body }}'
-        targetPath: '/tmp/'
+        url: '/tmp/extractedPath/yourfilenamehere'
+        targetPath: '/tmp/newfilePath'
         values:
           name: ${{ parameters.name }}
 

@@ -7,6 +7,7 @@ import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 import { createBinaryToFileAction } from './scaffolder/actions/custom';
 import { createCustomHttpBackstageAction } from '../actions/http-request-action/run/backstageRequest';
+import { createUnzipFileAction } from '../actions/unzip-file/run';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -27,7 +28,8 @@ export default async function createPlugin(
   const actions = [...builtInActions, 
     createHttpBackstageAction({ discovery }), 
     createBinaryToFileAction(),
-    createCustomHttpBackstageAction({ discovery }) ]; 
+    createCustomHttpBackstageAction({ discovery }),
+    createUnzipFileAction() ]; 
 
   return await createRouter({
     actions,
