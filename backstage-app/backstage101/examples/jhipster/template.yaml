@@ -122,36 +122,95 @@ spec:
   # via the parameters above.
   steps:
     # Each step executes an action, in this case one templates files into the working directory.
+    - id: jhipster_request
+      name: jhipster request
+      action: custom:http:request
+      input:
+        method: 'POST'
+        path: '/proxy/jhipster/api/download-application'
+        headers:
+          content-type: 'application/json'
+        body:
+          generator-jhipster:
+            applicationType: monolith
+            gitCompany: ''
+            baseName: jhipsterSampleApplication
+            packageName: com.mycompany.myapp
+            packageFolder: com/mycompany/myapp
+            serverPort: 8080
+            serviceDiscoveryType: false
+            authenticationType: jwt
+            cacheProvider: ehcache
+            enableHibernateCache: true
+            websocket: false
+            databaseType: sql
+            devDatabaseType: h2Disk
+            prodDatabaseType: postgresql
+            searchEngine: false
+            enableSwaggerCodegen: false
+            messageBroker: false
+            buildTool: maven
+            useSass: true
+            clientPackageManager: npm
+            testFrameworks: []
+            enableTranslation: true
+            nativeLanguage: en
+            languages:
+            - en
+            clientFramework: angularX
+            jhiPrefix: jhi
+            withAdminUi: true
+            blueprints: []
+      output:
+        getResponse: '${{ steps.jhipster_request.output.body }}'
+        getCode: '{{ steps.jhipster_request.output.code }}'
+        getHeaders: '{{ steps.jhipster_request.output.headers }}'
+
+    - id: debug-log
+      name: Debug Log
+      action: debug:log
+      input:
+        message: 'Output of jhipster_request getResponse ${{ steps.jhipster_request.output.body }} getCode ${{ steps.jhipster_request.output.code }} getHeader ${{ steps.jhipster_request.output.headers }}'
+
+    - id: save-body
+      name: Save HTTP Response Body
+      action: binary:file:create
+      input:
+        contents: '${{ steps.jhipster_request.output.body }}'
+        filename: 'response_body.zip'
+
     - id: fetch-base
       name: Fetch Base
-      action: fetch:template
+      action: fetch:plain
       input:
-        url: ./content
+        url: '${{ steps.jhipster_request.output.body }}'
+        targetPath: '/tmp/'
         values:
           name: ${{ parameters.name }}
 
     # This step publishes the contents of the working directory to GitHub.
-    - id: publish
-      name: Publish
-      action: publish:github
-      input:
-        allowedHosts: ['github.com']
-        description: This is ${{ parameters.name }}
-        repoUrl: ${{ parameters.repoUrl }}
+    #- id: publish
+    #  name: Publish
+    #  action: publish:github
+    #  input:
+    #    allowedHosts: ['github.com']
+    #    description: This is ${{ parameters.name }}
+    #    repoUrl: ${{ parameters.repoUrl }}
 
     # The final step is to register our new component in the catalog.
-    - id: register
-      name: Register
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+    #- id: register
+    #  name: Register
+    #  action: catalog:register
+    #  input:
+    #    repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+    #    catalogInfoPath: '/catalog-info.yaml'
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:
-    links:
-      - title: Repository
-        url: ${{ steps['publish'].output.remoteUrl }}
-      - title: Open in catalog
-        icon: catalog
-        entityRef: ${{ steps['register'].output.entityRef }}
+    getResponse: '{{ steps.jhipster_request.output.body }}'
+    #links:
+    #  - title: Repository
+    #    url: ${{ steps['publish'].output.remoteUrl }}
+    #  - title: Open in catalog
+    #    icon: catalog
+    #    entityRef: ${{ steps['register'].output.entityRef }}

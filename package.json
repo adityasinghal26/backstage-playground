@@ -12,5 +12,8 @@
     "template": "keepachangelog",
     "unreleased": true,
     "commitLimit": false
+  },
+  "dependencies": {
+    "@roadiehq/scaffolder-backend-module-utils": "^1.10.1"
   }
 }
