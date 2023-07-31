@@ -17,9 +17,9 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import path from 'path';
 // import zlib from 'zlib';
-// import unzipper from 'unzipper';
+import unzipper from 'unzipper';
 // import { pipeline } from 'node:stream';
-import JSZip from 'jszip';
+// import JSZip from 'jszip';
 import fs from 'node:fs';
 
 export const createUnzipFileAction = () => {
@@ -56,14 +56,16 @@ export const createUnzipFileAction = () => {
       async handler(ctx) {
 
         const filenameWithoutExtension = path.parse(ctx.input.fileName).name;
-        const fullInputPath = `${ctx.input.absoluteFilePath}/${ctx.input.fileName}`;
-        const fullExtractPath = `${ctx.input.extractPath}/${filenameWithoutExtension}`;
+        const fullInputPath = `${ctx.workspacePath}/${ctx.input.fileName}`;
+        const fullExtractPath = `${ctx.workspacePath}/${filenameWithoutExtension}`;
+
+        ctx.logger.info('Full input path ' + `${fullInputPath}`);
 
         fs.mkdir(fullExtractPath, (error) => {
             if (error) {
-              console.log(error);
+              ctx.logger.error(error);
             } else {
-              console.log("New Directory created successfully !!");
+              ctx.logger.info("New Directory created successfully !!" + `${fullExtractPath}`);
             }
         })
 
@@ -73,11 +75,11 @@ export const createUnzipFileAction = () => {
         // pipeline(input, unzip, output, (error) => {
         //    if (error) console.log(error);
         // });
-        fs.createReadStream(fullInputPath)
-          .pipe(unzipper.Extract({ path: fullExtractPath }))
-          .on("close", () => {
-           console.log("Files unzipped successfully");
-          });
+        // fs.createReadStream(fullInputPath)
+        //  .pipe(unzipper.Extract({ path: fullExtractPath }))
+        //  .on("close", () => {
+        //   console.log("Files unzipped successfully");
+        // });
       },
     });
   };

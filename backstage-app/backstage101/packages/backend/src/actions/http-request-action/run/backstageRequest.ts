@@ -28,6 +28,7 @@ export function createCustomHttpBackstageAction(options: {
 }) {
   const { discovery } = options;
   return createTemplateAction<{
+    name: string;
     path: string;
     method: Methods;
     headers?: Headers;
@@ -43,6 +44,11 @@ export function createCustomHttpBackstageAction(options: {
         type: 'object',
         required: ['path', 'method'],
         properties: {
+          name: {
+            type: 'string',
+            title: 'Application Name',
+            description: 'The application name for the zip file',
+          },
           method: {
             title: 'Method',
             type: 'string',
@@ -158,7 +164,7 @@ export function createCustomHttpBackstageAction(options: {
         httpOptions.headers.authorization = `Bearer ${token}`;
       }
 
-      const { code, headers, body } = await http(httpOptions, ctx.logger);
+      const { code, headers, body } = await http(httpOptions, ctx, ctx.logger);
 
       ctx.output('code', code);
       ctx.output('headers', headers);

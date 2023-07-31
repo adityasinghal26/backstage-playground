@@ -35,6 +35,7 @@ export const generateBackstageUrl = async (
 
 export const http = async (
   options: HttpOptions,
+  ctx: any,
   logger: Logger,
 ): Promise<any> => {
   let res: any;
@@ -76,10 +77,12 @@ export const http = async (
     const fileType = await FileType.fromBuffer(buffer);
     try {
         if (fileType.ext) {
-            const outputFileName = `/tmp/yourfilenamehere.${fileType.ext}`
+            logger.info('Context workspace path is ' + `${ctx.workspacePath}` + ' and file name input is ' + `${ctx.input.name}`);
+            const outputFileName = `${ctx.workspacePath}/${ctx.input.name}.${fileType.ext}`
             fs.createWriteStream(outputFileName).write(buffer);
+            logger.info('Successfully saved zip file ' + `${outputFileName}`)
         } else {
-            console.log('File type could not be reliably determined! The binary data may be malformed! No file saved!')
+            logger.warn('File type could not be reliably determined! The binary data may be malformed! No file saved!')
         }
     } catch(e) {
         throw new Error(`Could not save body: ${e}`);
@@ -92,11 +95,11 @@ export const http = async (
     // body = isArrayBuffer() ? await res.arrayBuffer() : { message: console.log("Not octet-stream") };
     if ( isArrayBuffer() ) {
         body = await res.arrayBuffer();
-        console.log("Body is found as octet-stream");
+        logger.info("Body is found as octet-stream");
         saveOctetStreamBuffer(body);
     } else {
         body = isJSON() ? await res.json() : { message: await res.text() };
-        console.log("Body was either JSON or converted to string object")
+        console.info("Body was either JSON or converted to string object")
     }
   } catch (e) {
     throw new HttpError(`Could not get response: ${e}`);
