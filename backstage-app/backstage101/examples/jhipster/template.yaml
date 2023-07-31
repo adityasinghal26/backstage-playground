@@ -79,7 +79,7 @@ spec:
           type: string
           title: Do you want to use the JHipster Registry to configure, monitor and scale your application?
           ui:widget: select
-          default: 'No'
+          default: false
           enum:
           - false
           - eureka
