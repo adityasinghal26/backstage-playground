@@ -247,23 +247,43 @@ spec:
           ui:widget: select
     - title: Internationalization Options
       type: object
-      required:
-      - enableTranslation
-      - nativeLanguage
       properties:
         enableTranslation:
-          type: boolean
+          type:  boolean
           title: Would you like to enable internationalization support?
-          default: true
           ui:widget: select
-        nativeLanguage:
-          type: string
-          title: Please choose the native language of the application
-          default: en
+          default: true
           enum:
-          - en
+          - true
+          - false
           enumNames:
-          - English
+          - 'Yes'
+          - 'No'
+      required:
+      - enableTranslation
+      dependencies:
+        enableTranslation:
+          oneOf:
+          - properties:
+              enableTranslation:
+                enum:
+                - true
+              nativeLanguage:
+                type: string
+                title: Please choose the native language of the application
+                default: en
+                enum:
+                - en
+                - fr
+                enumNames:
+                - English
+                - French
+            required:
+            - nativeLanguage
+          - properties:
+              enableTranslation:
+                enum:
+                - false
     - title: Testing Options
       type: object
       required:
@@ -297,7 +317,7 @@ spec:
           content-type: 'application/json'
         body:
           generator-jhipster:
-            applicationType: ${{ parameters.appType }}
+            applicationType: ${{ parameters.applicationType }}
             gitCompany: ''
             baseName: ${{ parameters.name }}
             packageName: ${{ parameters.packageName }}

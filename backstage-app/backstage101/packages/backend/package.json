@@ -41,6 +41,7 @@
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "pg": "^8.3.0",
+    "unzipper": "^0.10.14",
     "winston": "^3.2.1"
   },
   "devDependencies": {

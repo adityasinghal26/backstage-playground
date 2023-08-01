@@ -75,11 +75,11 @@ export const createUnzipFileAction = () => {
         // pipeline(input, unzip, output, (error) => {
         //    if (error) console.log(error);
         // });
-        // fs.createReadStream(fullInputPath)
-        //  .pipe(unzipper.Extract({ path: fullExtractPath }))
-        //  .on("close", () => {
-        //   console.log("Files unzipped successfully");
-        // });
+        fs.createReadStream(fullInputPath)
+          .pipe(unzipper.Extract({ path: fullExtractPath }))
+          .on("close", () => {
+           console.log("Files unzipped successfully");
+        });
       },
     });
   };
