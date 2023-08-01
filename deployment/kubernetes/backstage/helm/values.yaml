@@ -26,5 +26,7 @@ secrets:
   backendUrl: 'https://kubin-kloud-ominous-space-guide-q7pv6rggp64hvp-8000.preview.app.github.dev'
 
 postgres:
+  host: 'cG9zdGdyZXMucG9zdGdyZXMuc3ZjLmNsdXN0ZXIubG9jYWw='
+  port: 'NTQzMg=='
   username: 'YmFja3N0YWdl'
   password: 'aHVudGVyMg=='
