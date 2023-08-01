@@ -1,0 +1,28 @@
+namespace: 'jhipster'
+deployment:
+  name: 'jhipster'
+  apiVersion: 'apps/v1'
+  replicas: '1'
+
+service:
+  apiVersion: 'v1'
+  name: 'jhipster'
+  port: '8080'
+
+image:
+  registry: 'localhost:5001'
+  repository: 'jhipster'
+  tag: 'latest'
+
+container:
+  name: 'jhipster'
+  port: '8080'
+
+jhipster:
+  secret: 'jhipster-secrets'
+
+mysql:
+  host: 'mysql.mysql.svc.cluster.local'
+  port: '3306'
+  database: 'jhipster-online'
+  password: ''

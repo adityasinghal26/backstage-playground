@@ -34,12 +34,14 @@
     "@backstage/plugin-search-backend-node": "^1.2.2",
     "@backstage/plugin-techdocs-backend": "^1.6.3",
     "@backstage/plugin-todo-backend": "^0.1.44",
+    "@roadiehq/scaffolder-backend-module-http-request": "^4.0.10",
     "app": "link:../app",
     "better-sqlite3": "^8.0.0",
     "dockerode": "^3.3.1",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "pg": "^8.3.0",
+    "unzipper": "^0.10.14",
     "winston": "^3.2.1"
   },
   "devDependencies": {

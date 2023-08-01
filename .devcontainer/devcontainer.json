@@ -10,7 +10,8 @@
 		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers-contrib/features/kind:1": {},
-		"ghcr.io/rio/features/kustomize:1": {}
+		"ghcr.io/rio/features/kustomize:1": {},
+		"ghcr.io/devcontainers/features/java:1": {}
 	},
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

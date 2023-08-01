@@ -1,0 +1,24 @@
+namespace: 'mysql'
+deployment:
+  name: 'mysql'
+  apiVersion: 'apps/v1'
+  replicas: '1'
+
+service:
+  apiVersion: 'v1'
+  name: 'mysql'
+  port: '3306'
+
+image:
+  repository: 'mysql'
+  tag: '8'
+
+container:
+  name: 'mysql'
+  port: '3306'
+
+mysql:
+  secret: 'mysql-secrets'
+  allowEmptyPwd: 'yes'
+  database: 'jhipster-online'
+  password: ''
