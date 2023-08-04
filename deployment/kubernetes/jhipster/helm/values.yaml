@@ -10,9 +10,9 @@ service:
   port: '8080'
 
 image:
-  registry: 'localhost:5001'
+  registry: 'adityasinghal26'
   repository: 'jhipster'
-  tag: 'latest'
+  tag: '0.1.0'
 
 container:
   name: 'jhipster'

@@ -23,7 +23,11 @@ secrets:
   backstage: 'backstage-secrets'
   postgres: 'postgres-secrets'
   ghToken: 'dummy'
-  backendUrl: 'https://kubin-kloud-ominous-space-guide-q7pv6rggp64hvp-8000.preview.app.github.dev'
+  backendUrl: 'https://ideal-guacamole-7pv9qw4559rfpg4j-8001.preview.app.github.dev'
+  serviceToken: 'dummy'
+
+backstage:
+  kubernetesId: backstage_sample
 
 postgres:
   host: 'cG9zdGdyZXMucG9zdGdyZXMuc3ZjLmNsdXN0ZXIubG9jYWw='

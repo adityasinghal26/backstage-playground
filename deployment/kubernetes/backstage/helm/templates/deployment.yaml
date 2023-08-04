@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
+  labels:
+    backstage.io/kubernetes-id: {{ .Values.backstage.kubernetesId }}
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
@@ -13,6 +15,7 @@ spec:
     metadata:
       labels:
         app: {{ .Values.deployment.name }}
+        backstage.io/kubernetes-id: {{ .Values.backstage.kubernetesId }}
     spec:
       containers:
         - name: {{ .Values.container.name }}

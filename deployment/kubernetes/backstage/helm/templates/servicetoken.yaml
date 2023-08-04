@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secrettoken
+  namespace: backstage
+  annotations:
+    kubernetes.io/service-account.name: backstage
+  labels:
+    backstage.io/kubernetes-id: {{ .Values.backstage.kubernetesId }}
+type: kubernetes.io/service-account-token

@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: {{ .Values.service.name }}
   namespace: {{ .Values.namespace }}
+  labels:
+    backstage.io/kubernetes-id: {{ .Values.backstage.kubernetesId }}
 spec:
   selector:
     app: {{ .Values.deployment.name }}

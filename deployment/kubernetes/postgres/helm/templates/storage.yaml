@@ -5,6 +5,8 @@ metadata:
   name: postgres-storage
   namespace: {{ .Values.namespace }}
   labels:
+    backstage.io/kubernetes-id: {{ .Values.backstage.kubernetesId }}
+  labels:
     type: local
 spec:
   storageClassName: manual
@@ -21,6 +23,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-storage-claim
   namespace: {{ .Values.namespace }}
+  labels:
+    backstage.io/kubernetes-id: {{ .Values.backstage.kubernetesId }}
 spec:
   storageClassName: manual
   accessModes:

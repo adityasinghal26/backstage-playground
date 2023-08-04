@@ -17,6 +17,9 @@ container:
   name: 'postgres'
   port: '5432'
 
+backstage:
+  kubernetesId: backstage_sample
+
 postgres:
   username: 'YmFja3N0YWdl'
   password: 'aHVudGVyMg=='
