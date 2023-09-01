@@ -1,3 +1,4 @@
+
 [submodule "jhipster-online"]
 	path = jhipster-online
 	url = https://github.com/adityasinghal26/jhipster-online.git
