@@ -3,8 +3,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: example-jhipster-template
-  title: Example JHipster Template
-  description: An example template for the scaffolder that generates a JHipster service as per the input
+  title: JHipster Template
+  description: Template that generates a JHipster application as a Pull-Request based on user inputs
 spec:
   owner: user:guest
   type: service
@@ -351,11 +351,11 @@ spec:
         getCode: '{{ steps.jhipster_request.output.code }}'
         getHeaders: '{{ steps.jhipster_request.output.headers }}'
 
-    - id: debug-log
-      name: Debug Log
-      action: debug:log
-      input:
-        message: 'Output of jhipster_request getResponse ${{ steps.jhipster_request.output.body }} getCode ${{ steps.jhipster_request.output.code }} getHeader ${{ steps.jhipster_request.output.headers }}'
+    #- id: debug-log
+    #  name: Debug Log
+    #  action: debug:log
+    #  input:
+    #    message: 'Output of jhipster_request getResponse ${{ steps.jhipster_request.output.body }} getCode ${{ steps.jhipster_request.output.code }} getHeader ${{ steps.jhipster_request.output.headers }}'
 
     - id: unzip-file
       name: Unzip File
@@ -390,11 +390,13 @@ spec:
     # This step publishes the contents of the working directory to GitHub.
     - id: publish
       name: Publish
-      action: publish:github
+      action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
-        description: This is ${{ parameters.name }}
+        description: This is ${{ parameters.name }} pull request generated using JHipster
         repoUrl: ${{ parameters.repoUrl }}
+        branchName: ${{ parameters.name }}
+        title: ${{ parameters.name }}
 
     # The final step is to register our new component in the catalog.
     - id: register
