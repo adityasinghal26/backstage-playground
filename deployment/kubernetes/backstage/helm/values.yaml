@@ -23,6 +23,7 @@ secrets:
   backstage: 'backstage-secrets'
   postgres: 'postgres-secrets'
   ghToken: 'dummy'
+  azToken: 'dummy'
   backendUrl: 'https://kubin-kloud-ominous-space-guide-q7pv6rggp64hvp-8000.preview.app.github.dev'
 
 postgres:

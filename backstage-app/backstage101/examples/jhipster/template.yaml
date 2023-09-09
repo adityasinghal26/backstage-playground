@@ -2,11 +2,11 @@ apiVersion: scaffolder.backstage.io/v1beta3
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: example-jhipster-template
+  name: jhipster-template
   title: JHipster Template
-  description: Template that generates a JHipster application as a Pull-Request based on user inputs
+  description: Template that generates a JHipster application based on user inputs
 spec:
-  owner: user:guest
+  owner: admin:aditya.singhal
   type: service
 
   # These parameters are used to generate the input form in the frontend, and are
@@ -36,7 +36,24 @@ spec:
           ui:field: RepoUrlPicker
           ui:options:
             allowedHosts:
-            - github.com
+            # - github.com
+            - dev.azure.com
+            allowedOrganizations:
+            - org1
+            allowedProjects:
+            - project1
+            - project2
+        monorepo:
+          type: boolean
+          title: Do you want to generate application as MonoRepo?
+          ui:widget: select
+          default: true
+          enum:
+          - true
+          - false
+          enumNames:
+          - 'Yes'
+          - 'No'
     - title: Application Type
       type: object
       required:
@@ -68,6 +85,12 @@ spec:
           default: com.mycompany.myapp
           ui:options:
             rows: 1
+        packageFolder:
+          type: string
+          title: What is your default package folder?
+          default: com/mycompany/myapp
+          ui:options:
+            rows: 1
         serverPort:
           type: number
           title: On which port would like your server to run? It should be unique to avoid port conflicts
@@ -79,7 +102,7 @@ spec:
           type: string
           title: Do you want to use the JHipster Registry to configure, monitor and scale your application?
           ui:widget: select
-          default: false
+          default: eureka
           enum:
           - false
           - eureka
@@ -151,7 +174,7 @@ spec:
           type: string
           title: Which development database would you like to use?
           ui:widget: select
-          default: h2Disk
+          default: postgresql
           enum:
           - h2Disk
           - h2Memory
@@ -182,7 +205,7 @@ spec:
           type: string
           title: Which type of database would you like to use?
           ui:widget: select
-          default: ehcache
+          default: redis
           enum:
           - ehcache
           - caffeine
@@ -214,7 +237,7 @@ spec:
           type: string
           title: Would you like to use Maven or Gradle for building the backend?
           ui:widget: select
-          default: maven
+          default: gradle
           enum:
           - maven
           - gradle
@@ -307,7 +330,7 @@ spec:
   steps:
     # Each step executes an action, in this case one templates files into the working directory.
     - id: jhipster_request
-      name: jhipster request
+      name: JHipster Generation
       action: custom:http:request
       input:
         name: ${{ parameters.name }}
@@ -321,30 +344,30 @@ spec:
             gitCompany: ''
             baseName: ${{ parameters.name }}
             packageName: ${{ parameters.packageName }}
-            packageFolder: com/mycompany/myapp
+            packageFolder: ${{ parameters.packageFolder }}
             serverPort: ${{ parameters.serverPort }}
-            serviceDiscoveryType: false
-            authenticationType: jwt
-            cacheProvider: ehcache
-            enableHibernateCache: true
+            serviceDiscoveryType: ${{ parameters.serviceDiscoveryType }}
+            authenticationType: ${{ parameters.authenticationType }}
+            cacheProvider: ${{ parameters.cacheProvider }}
+            enableHibernateCache: ${{ parameters.enableHibernateCache }}
             websocket: false
-            databaseType: sql
-            devDatabaseType: h2Disk
-            prodDatabaseType: postgresql
+            databaseType: ${{ parameters.databaseType }}
+            devDatabaseType: ${{ parameters.devDatabaseType }}
+            prodDatabaseType: ${{ parameters.prodDatabaseType }}
             searchEngine: false
             enableSwaggerCodegen: false
             messageBroker: false
-            buildTool: maven
+            buildTool: ${{ parameters.buildTool }}
             useSass: true
             clientPackageManager: npm
-            testFrameworks: []
-            enableTranslation: true
-            nativeLanguage: en
+            testFrameworks: ${{ parameters.testFrameworks }}
+            enableTranslation: ${{ parameters.enableTranslation }}
+            nativeLanguage: ${{ parameters.nativeLanguage }}
             languages:
             - en
-            clientFramework: angularX
+            clientFramework: ${{ parameters.clientFramework }}
             jhiPrefix: jhi
-            withAdminUi: true
+            withAdminUi: ${{ parameters.withAdminUi }}
             blueprints: []
       output:
         getResponse: '${{ steps.jhipster_request.output.body }}'
@@ -361,9 +384,16 @@ spec:
       name: Unzip File
       action: unzip:file:create
       input:
+        monorepo: ${{ parameters.monorepo }}
         absoluteFilePath: '/tmp'
         fileName: '${{ parameters.name }}.zip'
         extractPath: '/tmp'
+    
+    - id: delete-zip
+      name: Delete Zip
+      action: fs:delete
+      input:
+        files: ['${{ parameters.name }}.zip']
 
     #- id: save-body
     #  name: Save HTTP Response Body
@@ -372,35 +402,54 @@ spec:
     #    contents: '${{ steps.jhipster_request.output.body }}'
     #    filename: 'response_body.zip'
 
-    - id: fetch-catalog
-      name: Fetch Catalog
+    - id: fetch-catalog-monorepo
+      name: Fetch Catalog (Monorepo)
+      if: ${{ parameters.monorepo === true }}
       action: fetch:template
       input:
         url: './content'
-        targetPath: ${{ parameters.name }}
+        targetPath: ''
         values:
           name: ${{ parameters.name }}
 
-    - id: debug-wait
-      name: Debug Wait
-      action: debug:wait
+    - id: fetch-catalog-multirepo
+      name: Fetch Catalog (Multirepo)
+      if: ${{ parameters.monorepo === false }}
+      action: fetch:template
       input:
-        seconds: 25
+        url: './content'
+        targetPath: '${{ parameters.name }}'
+        values:
+          name: ${{ parameters.name }}
+
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
 
     # This step publishes the contents of the working directory to GitHub.
     - id: publish
-      name: Publish
-      action: publish:github:pull-request
+      name: Publish Repository
+      action: publish:azure
       input:
-        allowedHosts: ['github.com']
-        description: This is ${{ parameters.name }} pull request generated using JHipster
+        allowedHosts: ['dev.azure.com']
+        description: This is ${{ parameters.name }} application repository generated using Backstage and JHipster
         repoUrl: ${{ parameters.repoUrl }}
         branchName: ${{ parameters.name }}
         title: ${{ parameters.name }}
 
     # The final step is to register our new component in the catalog.
-    - id: register
-      name: Register
+    - id: register-monorepo
+      name: Register Monorepo
+      if: ${{ parameters.monorepo === true }}
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+    - id: register-multirepo
+      name: Register Multirepo
+      if: ${{ parameters.monorepo === false }}
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
@@ -414,4 +463,7 @@ spec:
         url: ${{ steps['publish'].output.remoteUrl }}
       - title: Open in catalog
         icon: catalog
-        entityRef: ${{ steps['register'].output.entityRef }}
+        entityRef: ${{ steps['register-monorepo'].output.entityRef }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register-multirepo'].output.entityRef }}

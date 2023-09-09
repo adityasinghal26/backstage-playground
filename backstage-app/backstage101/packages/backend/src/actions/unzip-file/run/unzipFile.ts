@@ -24,6 +24,7 @@ import fs from 'node:fs';
 
 export const createUnzipFileAction = () => {
     return createTemplateAction<{ 
+      monorepo: boolean;
       absoluteFilePath: string; 
       fileName: string; 
       extractPath: string; 
@@ -31,9 +32,14 @@ export const createUnzipFileAction = () => {
         id: 'unzip:file:create',
         schema: {
           input: {
-            required: ['absoluteFilePath', 'fileName', 'extractPath'],
+            required: ['monorepo','absoluteFilePath', 'fileName', 'extractPath'],
             type: 'object',
             properties: {
+              monorepo: {
+                type: 'boolean',
+                title: 'MonoRepo',
+                description: 'The status of repository as monorepo or multirepo',
+              },
                 absoluteFilePath: {
                 type: 'string',
                 title: 'Absolute Zip file path',
@@ -55,19 +61,24 @@ export const createUnzipFileAction = () => {
   
       async handler(ctx) {
 
-        const filenameWithoutExtension = path.parse(ctx.input.fileName).name;
         const fullInputPath = `${ctx.workspacePath}/${ctx.input.fileName}`;
-        const fullExtractPath = `${ctx.workspacePath}/${filenameWithoutExtension}`;
+        let fullExtractPath = `${ctx.workspacePath}`;
 
         ctx.logger.info('Full input path ' + `${fullInputPath}`);
+        
+        if(!ctx.input.monorepo){
+          ctx.logger.info('Application is being generated as Multi-Repo.')
+          const filenameWithoutExtension = path.parse(ctx.input.fileName).name;
+          fullExtractPath = `${ctx.workspacePath}/${filenameWithoutExtension}`;
 
-        fs.mkdir(fullExtractPath, (error) => {
+          fs.mkdir(fullExtractPath, (error) => {
             if (error) {
               ctx.logger.error(error);
             } else {
               ctx.logger.info("New Directory created successfully !!" + `${fullExtractPath}`);
             }
-        })
+          }) 
+        }
 
         // const unzip = zlib.createUnzip();
         // const input = fs.createReadStream(fullInputPath);
@@ -78,7 +89,7 @@ export const createUnzipFileAction = () => {
         fs.createReadStream(fullInputPath)
           .pipe(unzipper.Extract({ path: fullExtractPath }))
           .on("close", () => {
-           console.log("Files unzipped successfully");
+           ctx.logger.info("Files unzipped successfully");
         });
       },
     });
