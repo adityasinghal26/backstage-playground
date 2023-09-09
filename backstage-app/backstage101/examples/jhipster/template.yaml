@@ -309,8 +309,6 @@ spec:
                 - false
     - title: Testing Options
       type: object
-      required:
-      - testFrameworks
       properties:
         testFrameworks:
           type: array
