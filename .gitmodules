@@ -1,0 +1,5 @@
+
+[submodule "jhipster-online"]
+	path = jhipster-online
+	url = https://github.com/adityasinghal26/jhipster-online.git
+	branch = codespace-kubin-kloud-effective-space-waffle-wr7vw9wj59x4cgxpv

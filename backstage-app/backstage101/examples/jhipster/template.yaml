@@ -1,0 +1,467 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: jhipster-template
+  title: JHipster Template
+  description: Template that generates a JHipster application based on user inputs
+spec:
+  owner: admin:aditya.singhal
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Application Name
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          title: Unique name of the application service
+          default: jhipsterSampleApplication
+          ui:autofocus: 'true'
+          ui:options:
+            rows: 5
+    - title: Repository Location
+      description: URL of the repository
+      type: object
+      required:
+      - repoUrl
+      properties:
+        repoUrl:
+          type: string
+          title: Repository Location
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+            # - github.com
+            - dev.azure.com
+            allowedOrganizations:
+            - org1
+            allowedProjects:
+            - project1
+            - project2
+        monorepo:
+          type: boolean
+          title: Do you want to generate application as MonoRepo?
+          ui:widget: select
+          default: true
+          enum:
+          - true
+          - false
+          enumNames:
+          - 'Yes'
+          - 'No'
+    - title: Application Type
+      type: object
+      required:
+      - applicationType
+      properties:
+        applicationType:
+          type: string
+          title: Which type of application would you like to create?
+          default: Monolithic Application (recommended for simple projects)
+          ui:widget: select
+          enum:
+          - monolith
+          - microservice
+          - gateway
+          enumNames:
+          - Monolithic Application (recommended for simple projects)
+          - Microservice Application
+          - Microservice Gateway
+    - title: Server Side Options
+      type: object
+      required:
+      - packageName
+      - serverPort
+      - serviceDiscoveryType
+      properties:
+        packageName:
+          type: string
+          title: What is your default package name?
+          default: com.mycompany.myapp
+          ui:options:
+            rows: 1
+        packageFolder:
+          type: string
+          title: What is your default package folder?
+          default: com/mycompany/myapp
+          ui:options:
+            rows: 1
+        serverPort:
+          type: number
+          title: On which port would like your server to run? It should be unique to avoid port conflicts
+          default: 8080
+          maxLength: 4
+          ui:options:
+            rows: 1
+        serviceDiscoveryType:
+          type: string
+          title: Do you want to use the JHipster Registry to configure, monitor and scale your application?
+          ui:widget: select
+          default: eureka
+          enum:
+          - false
+          - eureka
+          - consul
+          enumNames:
+          - 'No'
+          - 'Yes'
+          - 'No, use Consul as an alternative solution (Uses Spring Cloud Consul)'
+        authenticationType:
+          type: string
+          title: Which type of authentication would you like to use?
+          ui:widget: select
+          default: jwt
+          enum:
+          - jwt
+          - oauth2
+          - session
+          enumNames:
+          - JWT authentication (stateless, with a token)
+          - OAuth 2.0 / OIDC Authentication (stateful, works with KeyCloak and Okta)
+          - HTTP Session Authentication (stateful, default Spring Security mechanism)
+        databaseType:
+          type: string
+          title: Which type of database would you like to use?
+          ui:widget: select
+          default: sql
+          enum:
+          - sql
+          - mongodb
+          - cassandra
+          - couchbase
+          - neo4j
+          - no
+          enumNames:
+          - SQL (H2, MySQL, MariaDB, PostgreSQL, Oracle, MSSQL)
+          - MongoDB
+          - Cassandra
+          - Couchbase
+          - Neo4j
+          - No database     
+        prodDatabaseType:
+          type: string
+          title: Which production database would you like to use?
+          ui:widget: select
+          default: postgresql
+          enum:
+          - postgresql
+          - mysql
+          - mariadb
+          - oracle
+          - mssql
+          - mongodb
+          - cassandra
+          - couchbase
+          - neo4j
+          - no
+          enumNames:
+          - PostgreSQL
+          - MySQL
+          - MariaDB
+          - Oracle (Please follow our documentation to use the Oracle proprietory driver)
+          - Microsoft SQL Server
+          - MongoDB
+          - Cassandra
+          - Couchbase
+          - Neo4j
+          - No database
+        devDatabaseType:
+          type: string
+          title: Which development database would you like to use?
+          ui:widget: select
+          default: postgresql
+          enum:
+          - h2Disk
+          - h2Memory
+          - postgresql
+          - mysql
+          - mariadb
+          - oracle
+          - mssql
+          - mongodb
+          - cassandra
+          - couchbase
+          - neo4j
+          - no
+          enumNames:
+          - H2 with disk-based persistence
+          - H2 with in-memory persistence
+          - PostgreSQL
+          - MySQL
+          - MariaDB
+          - Oracle (Please follow our documentation to use the Oracle proprietory driver)
+          - Microsoft SQL Server
+          - MongoDB
+          - Cassandra
+          - Couchbase
+          - Neo4j
+          - No database
+        cacheProvider:
+          type: string
+          title: Which type of database would you like to use?
+          ui:widget: select
+          default: redis
+          enum:
+          - ehcache
+          - caffeine
+          - hazelcast
+          - infinispan
+          - memcached
+          - redis
+          - no
+          enumNames:
+          - Yes, with ehCache (local cache, for a single node)
+          - Yes, with Caffeine (local cache, for a single node)
+          - Yes, with HazelCast (distributed cache, for multiple nodes)
+          - Yes, with Infinispan (hybrid cache, for multiple nodes)
+          - Yes, with MemCached (distributed cache)
+          - Yes, with Redis (single server)
+          - No 
+        enableHibernateCache:
+          type: boolean
+          title: Do you want to use Hibernate 2nd level cache?
+          ui:widget: select
+          default: true
+          enum:
+          - true
+          - false
+          enumNames:
+          - 'Yes'
+          - 'No'
+        buildTool:
+          type: string
+          title: Would you like to use Maven or Gradle for building the backend?
+          ui:widget: select
+          default: gradle
+          enum:
+          - maven
+          - gradle
+          enumNames:
+          - 'Maven'
+          - 'Gradle'
+    - title: Client Side Options
+      type: object
+      required:
+      - clientFramework
+      - withAdminUi
+      properties:
+        clientFramework:
+          type: string
+          title: Which Framework would you like to use for the client?
+          default: angularX
+          ui:widget: select
+          enum:
+          - angularX
+          - react
+          - vue
+          enumNames:
+          - Angular
+          - React
+          - Vue
+        withAdminUi:
+          type: boolean
+          title: Do you want to generate the admin UI?
+          default: true
+          ui:widget: select
+    - title: Internationalization Options
+      type: object
+      properties:
+        enableTranslation:
+          type:  boolean
+          title: Would you like to enable internationalization support?
+          ui:widget: select
+          default: true
+          enum:
+          - true
+          - false
+          enumNames:
+          - 'Yes'
+          - 'No'
+      required:
+      - enableTranslation
+      dependencies:
+        enableTranslation:
+          oneOf:
+          - properties:
+              enableTranslation:
+                enum:
+                - true
+              nativeLanguage:
+                type: string
+                title: Please choose the native language of the application
+                default: en
+                enum:
+                - en
+                - fr
+                enumNames:
+                - English
+                - French
+            required:
+            - nativeLanguage
+          - properties:
+              enableTranslation:
+                enum:
+                - false
+    - title: Testing Options
+      type: object
+      properties:
+        testFrameworks:
+          type: array
+          title: Besides JUnit and Jest, which testing frameworks would you like to use?
+          items:
+            type: string
+            enum:
+            - Gatling
+            - Cucumber
+            - Cypress
+            - Protractor (deprecated)
+          uniqueItems: true
+          ui:widget: checkboxes
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: jhipster_request
+      name: JHipster Generation
+      action: custom:http:request
+      input:
+        name: ${{ parameters.name }}
+        method: 'POST'
+        path: '/proxy/jhipster/api/download-application'
+        headers:
+          content-type: 'application/json'
+        body:
+          generator-jhipster:
+            applicationType: ${{ parameters.applicationType }}
+            gitCompany: ''
+            baseName: ${{ parameters.name }}
+            packageName: ${{ parameters.packageName }}
+            packageFolder: ${{ parameters.packageFolder }}
+            serverPort: ${{ parameters.serverPort }}
+            serviceDiscoveryType: ${{ parameters.serviceDiscoveryType }}
+            authenticationType: ${{ parameters.authenticationType }}
+            cacheProvider: ${{ parameters.cacheProvider }}
+            enableHibernateCache: ${{ parameters.enableHibernateCache }}
+            websocket: false
+            databaseType: ${{ parameters.databaseType }}
+            devDatabaseType: ${{ parameters.devDatabaseType }}
+            prodDatabaseType: ${{ parameters.prodDatabaseType }}
+            searchEngine: false
+            enableSwaggerCodegen: false
+            messageBroker: false
+            buildTool: ${{ parameters.buildTool }}
+            useSass: true
+            clientPackageManager: npm
+            testFrameworks: ${{ parameters.testFrameworks }}
+            enableTranslation: ${{ parameters.enableTranslation }}
+            nativeLanguage: ${{ parameters.nativeLanguage }}
+            languages:
+            - en
+            clientFramework: ${{ parameters.clientFramework }}
+            jhiPrefix: jhi
+            withAdminUi: ${{ parameters.withAdminUi }}
+            blueprints: []
+      output:
+        getResponse: '${{ steps.jhipster_request.output.body }}'
+        getCode: '{{ steps.jhipster_request.output.code }}'
+        getHeaders: '{{ steps.jhipster_request.output.headers }}'
+
+    #- id: debug-log
+    #  name: Debug Log
+    #  action: debug:log
+    #  input:
+    #    message: 'Output of jhipster_request getResponse ${{ steps.jhipster_request.output.body }} getCode ${{ steps.jhipster_request.output.code }} getHeader ${{ steps.jhipster_request.output.headers }}'
+
+    - id: unzip-file
+      name: Unzip File
+      action: unzip:file:create
+      input:
+        monorepo: ${{ parameters.monorepo }}
+        absoluteFilePath: '/tmp'
+        fileName: '${{ parameters.name }}.zip'
+        extractPath: '/tmp'
+    
+    - id: delete-zip
+      name: Delete Zip
+      action: fs:delete
+      input:
+        files: ['${{ parameters.name }}.zip']
+
+    #- id: save-body
+    #  name: Save HTTP Response Body
+    #  action: binary:file:create
+    #  input:
+    #    contents: '${{ steps.jhipster_request.output.body }}'
+    #    filename: 'response_body.zip'
+
+    - id: fetch-catalog-monorepo
+      name: Fetch Catalog (Monorepo)
+      if: ${{ parameters.monorepo === true }}
+      action: fetch:template
+      input:
+        url: './content'
+        targetPath: ''
+        values:
+          name: ${{ parameters.name }}
+
+    - id: fetch-catalog-multirepo
+      name: Fetch Catalog (Multirepo)
+      if: ${{ parameters.monorepo === false }}
+      action: fetch:template
+      input:
+        url: './content'
+        targetPath: '${{ parameters.name }}'
+        values:
+          name: ${{ parameters.name }}
+
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
+
+    # This step publishes the contents of the working directory to GitHub.
+    - id: publish
+      name: Publish Repository
+      action: publish:azure
+      input:
+        allowedHosts: ['dev.azure.com']
+        description: This is ${{ parameters.name }} application repository generated using Backstage and JHipster
+        repoUrl: ${{ parameters.repoUrl }}
+        branchName: ${{ parameters.name }}
+        title: ${{ parameters.name }}
+
+    # The final step is to register our new component in the catalog.
+    - id: register-monorepo
+      name: Register Monorepo
+      if: ${{ parameters.monorepo === true }}
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+    - id: register-multirepo
+      name: Register Multirepo
+      if: ${{ parameters.monorepo === false }}
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/${{ parameters.name }}/catalog-info.yaml'
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    # getResponse: '{{ steps.jhipster_request.output.body }}'
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register-monorepo'].output.entityRef }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register-multirepo'].output.entityRef }}

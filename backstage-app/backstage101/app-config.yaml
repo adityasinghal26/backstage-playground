@@ -31,11 +31,11 @@ backend:
   database:
     client: pg
     connection:
-      host: postgres.postgres.svc.cluster.local
-      port: 5432
-      user: backstage
-      password: hunter2
-        # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+      host: ${POSTGRES_SERVICE_HOST}
+      port: ${POSTGRES_SERVICE_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+  workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
   github:
@@ -47,12 +47,17 @@ integrations:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
     #   token: ${GHE_TOKEN}
+  azure:
+    - host: dev.azure.com
+      token: ${AZURE_TOKEN}
+      # credentials:
+      #   - personalAccessToken: ${PERSONAL_ACCESS_TOKEN}
 
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
-  # '/test':
-  #   target: 'https://example.com'
+  '/jhipster':
+    target: 'http://jhipster.jhipster.svc.cluster.local:8080'
   #   changeOrigin: true
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
@@ -87,6 +92,12 @@ catalog:
     # Local example template
     - type: file
       target: ../../examples/template/template.yaml
+      rules:
+        - allow: [Template]
+
+    # Local example template
+    - type: file
+      target: ../../examples/jhipster/template.yaml
       rules:
         - allow: [Template]
 

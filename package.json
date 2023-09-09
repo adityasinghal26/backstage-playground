@@ -2,6 +2,7 @@
   "name": "backstage-playground",
   "version": "0.1.0",
   "devDependencies": {
+    "@types/unzipper": "^0.10.6",
     "auto-changelog": "^2.4.0"
   },
   "scripts": {
@@ -12,5 +13,9 @@
     "template": "keepachangelog",
     "unreleased": true,
     "commitLimit": false
+  },
+  "dependencies": {
+    "@roadiehq/scaffolder-backend-module-utils": "^1.10.1",
+    "unzipper": "^0.10.14"
   }
 }
