@@ -30,6 +30,7 @@ spec:
       required:
       - repoUrl
       - personalAccessToken
+      - base64EncodedToken
       properties:
         repoUrl:
           type: string
@@ -48,6 +49,13 @@ spec:
           type: string
           title: Personal Access Token
           ui:widget: password
+          ui:options:
+            rows: 1
+        base64EncodedToken:
+          type: string
+          title: Base64 Encoded Personal Access Token
+          ui:widget: password
+          ui:description: Run command `mypat=:pat && echo -n $mypat | base64` in linux terminal to generate base64 encoded token. Replace pat with actual token value.
           ui:options:
             rows: 1
         monorepo:
@@ -458,7 +466,7 @@ spec:
         path: '/${{ (parameters.repoUrl | parseRepoUrl).organization }}/${{ (parameters.repoUrl | parseRepoUrl).project }}/_apis/pipelines?api-version=7.0'
         headers:
           content-type: 'application/json'
-          authorization: 'Basic OnN4dDJ4d2ViaWZwYnI0ZGh0MmlvanMyYmtyYXc3czYyaWZmbmJ0Y2F5dGM2bGF2eW1ic3E='
+          authorization: 'Basic ${{ parameters.base64EncodedToken }}'
         body:
           folder: ''
           name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
@@ -481,7 +489,7 @@ spec:
         path: '/${{ (parameters.repoUrl | parseRepoUrl).organization }}/${{ (parameters.repoUrl | parseRepoUrl).project }}/_apis/pipelines?api-version=7.0'
         headers:
           content-type: 'application/json'
-          authorization: 'Basic OnN4dDJ4d2ViaWZwYnI0ZGh0MmlvanMyYmtyYXc3czYyaWZmbmJ0Y2F5dGM2bGF2eW1ic3E='
+          authorization: 'Basic ${{ parameters.base64EncodedToken }}'
         body:
           folder: '${{ parameters.name }}'
           name: ${{ parameters.name }}
