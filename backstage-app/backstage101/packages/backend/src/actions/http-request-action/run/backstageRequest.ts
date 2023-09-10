@@ -17,6 +17,7 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import {
   generateBackstageUrl,
+  generateApiUrl,
   http,
   getObjFieldCaseInsensitively,
 } from './helpers';
@@ -29,6 +30,8 @@ export function createCustomHttpBackstageAction(options: {
   const { discovery } = options;
   return createTemplateAction<{
     name: string;
+    useProxy: boolean;
+    baseUrl: string;
     path: string;
     method: Methods;
     headers?: Headers;
@@ -42,7 +45,7 @@ export function createCustomHttpBackstageAction(options: {
     schema: {
       input: {
         type: 'object',
-        required: ['path', 'method'],
+        required: ['path', 'method', 'useProxy'],
         properties: {
           name: {
             type: 'string',
@@ -63,6 +66,16 @@ export function createCustomHttpBackstageAction(options: {
               'PUT',
               'PATCH',
             ],
+          },
+          useProxy: {
+            type: 'boolean',
+            title: 'Use Backstage Proxy',
+            description: 'Whether to use Backstage Proxy or not',
+          },
+          baseUrl: {
+            type: 'string',
+            title: 'Base URL for API',
+            description: 'Base URL for API in case proxy is not used',
           },
           path: {
             title: 'Request path',
@@ -117,11 +130,11 @@ export function createCustomHttpBackstageAction(options: {
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
-      const url = await generateBackstageUrl(discovery, input.path);
+      const url = (input.useProxy) ? await generateBackstageUrl(discovery, input.path) : await generateApiUrl(input.baseUrl, input.path);
 
       if (logRequestPath) {
         ctx.logger.info(
-          `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
+          `Creating ${method} request with ${this.id} scaffolder action against ${url}`,
         );
       } else {
         ctx.logger.info(

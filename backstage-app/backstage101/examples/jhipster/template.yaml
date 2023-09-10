@@ -333,6 +333,7 @@ spec:
       input:
         name: ${{ parameters.name }}
         method: 'POST'
+        useProxy: true
         path: '/proxy/jhipster/api/download-application'
         headers:
           content-type: 'application/json'
