@@ -2,6 +2,9 @@
   "name": "backstage-playground",
   "version": "0.1.0",
   "devDependencies": {
+    "@backstage/catalog-model": "^1.4.1",
+    "@backstage/core-components": "^0.13.4",
+    "@material-ui/core": "^4.12.4",
     "@types/unzipper": "^0.10.6",
     "auto-changelog": "^2.4.0"
   },
@@ -15,6 +18,7 @@
     "commitLimit": false
   },
   "dependencies": {
+    "@roadiehq/backstage-plugin-argo-cd": "^2.3.3",
     "@roadiehq/scaffolder-backend-module-utils": "^1.10.1",
     "unzipper": "^0.10.14"
   }

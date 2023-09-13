@@ -24,6 +24,7 @@ secrets:
   postgres: 'postgres-secrets'
   ghToken: 'dummy'
   azToken: 'dummy'
+  argocdToken: 'argocd.token=token-value'
   backendUrl: 'https://adityasinghal26-devcontainer-name-8000.preview.app.github.dev'
 
 postgres:
