@@ -54,6 +54,14 @@ integrations:
       #   - personalAccessToken: ${PERSONAL_ACCESS_TOKEN}
 
 proxy:
+  '/argocd/api':
+    target: https://my-argocd.mycompany.com/api/v1/
+    changeOrigin: true
+    # only if your argocd api has self-signed cert
+    secure: false
+    headers:
+      Cookie:
+        $env: ARGOCD_AUTH_TOKEN
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
   '/jhipster':
