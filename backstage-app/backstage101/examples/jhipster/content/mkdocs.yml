@@ -1,0 +1,9 @@
+site_name: '"jhipsterSampleApplication"'
+
+nav:
+  - Home: index.md
+  - overview:
+      - Readme: 'overview/README.md'
+
+plugins:
+  - techdocs-core
