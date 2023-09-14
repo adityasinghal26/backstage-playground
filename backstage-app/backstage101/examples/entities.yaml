@@ -13,6 +13,7 @@ kind: Component
 metadata:
   name: example-website
   annotations:
+    forms.office.com/feedback: https://forms.office.com/form-value
     argocd/app-name: your-app-name
 spec:
   type: website
