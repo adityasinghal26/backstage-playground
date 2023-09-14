@@ -17,7 +17,7 @@ kind: Component
 metadata:
   name: example-website
   annotations:
-    forms.office.com/feedback: https://forms.office.com/form-value
+    forms.office.com/feedback: <microsoft-office-form-complete-url>
 spec:
   type: website
   lifecycle: experimental
