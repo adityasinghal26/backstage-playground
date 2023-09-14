@@ -11,3 +11,16 @@ spec:
   type: website
   owner: john@example.com
   lifecycle: experimental
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: example-website
+  annotations:
+    forms.office.com/feedback: https://forms.office.com/form-value
+spec:
+  type: website
+  lifecycle: experimental
+  owner: guests
+  system: examples
+  providesApis: [example-grpc-api]
