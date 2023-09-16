@@ -75,12 +75,17 @@ const techdocsContent = (
   </EntityTechdocsContent>
 );
 
+
+
 const cicdContent = (
   // This is an example of how you can implement your company's logic in entity page.
   // You can for example enforce that all components of type 'service' should use GitHubActions
   <EntitySwitch>
     <EntitySwitch.Case if={isGithubActionsAvailable}>
       <EntityGithubActionsContent />
+    </EntitySwitch.Case>
+    <EntitySwitch.Case if={isAzurePipelinesAvailable}>
+        <EntityAzurePipelinesContent defaultLimit={25} />
     </EntitySwitch.Case>
 
     <EntitySwitch.Case>
@@ -132,6 +137,16 @@ const overviewContent = (
       <EntityCatalogGraphCard variant="gridItem" height={400} />
     </Grid>
     <EntitySwitch>
+      <EntitySwitch.Case if={isAzureDevOpsAvailable}>
+        <Grid item md={6}>
+          ...
+        </Grid>
+        <Grid item md={6}>
+          <EntityAzureReadmeCard maxHeight={350} />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
         <Grid item sm={4}>
           <EntityArgoCDOverviewCard />
@@ -151,6 +166,7 @@ const overviewContent = (
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
   </Grid>
+  
 );
 
 const serviceEntityPage = (
@@ -161,6 +177,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
       {cicdContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
+      <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/api" title="API">

@@ -24,6 +24,7 @@
     "@backstage/plugin-app-backend": "^0.3.46",
     "@backstage/plugin-auth-backend": "^0.18.4",
     "@backstage/plugin-auth-node": "^0.2.15",
+    "@backstage/plugin-azure-devops-backend": "^0.3.29",
     "@backstage/plugin-catalog-backend": "^1.10.0",
     "@backstage/plugin-permission-common": "^0.7.6",
     "@backstage/plugin-permission-node": "^0.7.9",
