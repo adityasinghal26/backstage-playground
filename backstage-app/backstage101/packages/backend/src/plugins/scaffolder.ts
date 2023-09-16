@@ -7,6 +7,7 @@ import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 import { createCustomHttpBackstageAction } from '../actions/http-request-action/run/backstageRequest';
 import { createUnzipFileAction } from '../actions/unzip-file/run';
+import { createGitPullRequestAction } from '../actions/git-pull-request/run/gitPullRequest';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -27,7 +28,8 @@ export default async function createPlugin(
   const actions = [...builtInActions, 
     createHttpBackstageAction({ discovery }), 
     createCustomHttpBackstageAction({ discovery }),
-    createUnzipFileAction() ]; 
+    createUnzipFileAction(),
+    createGitPullRequestAction() ]; 
 
   return await createRouter({
     actions,
