@@ -20,6 +20,7 @@ backend:
     # host: 127.0.0.1
   csp:
     connect-src: ["'self'", 'http:', 'https:']
+    frame-src: ["'self'", 'https://forms.office.com/']
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
@@ -50,12 +51,19 @@ integrations:
   azure:
     - host: dev.azure.com
       token: ${AZURE_TOKEN}
+
+azureDevOps:
+  host: dev.azure.com
+  token: ${AZURE_TOKEN}
+  organization: ORG1
       # credentials:
       #   - personalAccessToken: ${PERSONAL_ACCESS_TOKEN}
 
 proxy:
   '/argocd/api':
     target: https://my-argocd.mycompany.com/api/v1/
+    pathRewrite:
+      '/api/proxy/argocd/api': '/'
     changeOrigin: true
     # only if your argocd api has self-signed cert
     secure: false
@@ -66,6 +74,8 @@ proxy:
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
   '/jhipster':
     target: 'http://jhipster.jhipster.svc.cluster.local:8080'
+    pathRewrite:
+      '/api/proxy/jhipster/': '/'
   #   changeOrigin: true
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration

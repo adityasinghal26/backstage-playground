@@ -425,6 +425,8 @@ spec:
         targetPath: ''
         values:
           name: ${{ parameters.name }}
+          project: ${{ (parameters.repoUrl | parseRepoUrl).project }}
+          repo: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
     - id: fetch-catalog-multirepo
       name: Fetch Catalog (Multirepo)
@@ -435,6 +437,8 @@ spec:
         targetPath: '${{ parameters.name }}'
         values:
           name: ${{ parameters.name }}
+          project: ${{ (parameters.repoUrl | parseRepoUrl).project }}
+          repo: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
     # - id: debug-wait
     #   name: Debug Wait
@@ -491,10 +495,11 @@ spec:
           content-type: 'application/json'
           authorization: 'Basic ${{ parameters.base64EncodedToken }}'
         body:
-          folder: '${{ parameters.name }}'
+          folder: ''
           name: ${{ parameters.name }}
           configuration:
-            path: 'azure-pipelines.yml'
+            type: 'yaml'
+            path: '${{ parameters.name }}/azure-pipelines.yml'
             repository:
               id: ${{ steps['publish'].output.repositoryId }}
               type: 'azureReposGit'
