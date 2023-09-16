@@ -79,6 +79,19 @@ techdocs:
   publisher:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
+kubernetes:
+  serviceLocatorMethod:
+    type: 'multiTenant'
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters:
+        - url: ${K8S_CLUSTER1_URL}
+          name: ${K8S_CLUSTER1_NAME}
+          authProvider: 'serviceAccount'
+          skipTLSVerify: true
+          skipMetricsLookup: true
+          serviceAccountToken: ${K8S_CLUSTER1_SA_TOKEN}
+
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   providers: {}
