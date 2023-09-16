@@ -28,6 +28,7 @@ import scaffolder from './plugins/scaffolder';
 import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
 import search from './plugins/search';
+import kubernetes from './plugins/kubernetes';
 import azureDevOps from './plugins/azure-devops';
 import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
@@ -88,6 +89,7 @@ async function main() {
   const searchEnv = useHotMemoize(module, () => createEnv('search'));
   const appEnv = useHotMemoize(module, () => createEnv('app'));
   const todoEnv = useHotMemoize(module, () => createEnv('todo'));
+  const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
   const azureDevOpsEnv = useHotMemoize(module, () => createEnv('azure-devops'));
 
   const apiRouter = Router();
@@ -98,6 +100,7 @@ async function main() {
   apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use('/search', await search(searchEnv));
   apiRouter.use('/todo', await todo(todoEnv));
+  apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
   apiRouter.use('/azure-devops', await azureDevOps(azureDevOpsEnv));
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback

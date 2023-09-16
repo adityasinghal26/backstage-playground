@@ -57,6 +57,7 @@ import {
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { EntityTodoContent } from '@backstage/plugin-todo';
+import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 import {
   
   EntityAzurePipelinesContent,
@@ -179,6 +180,10 @@ const serviceEntityPage = (
       {cicdContent}
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
+      <EntityKubernetesContent refreshIntervalMs={30000} />
+    </EntityLayout.Route>
+    
     <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
       <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
