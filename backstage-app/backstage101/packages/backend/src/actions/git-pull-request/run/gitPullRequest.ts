@@ -15,9 +15,18 @@
  */
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
+import { simpleGit } from 'simple-git';
 // import path from 'path';
 // import { pipeline } from 'node:stream';
-// import fs from 'node:fs';
+import uuid from 'uuid';
+import fs from 'node:fs';
+import { cloneGitRepo, 
+  commitAndPushGitChanges, 
+  copyGitChanges, 
+  createAndCheckoutBranch, 
+  createPullRequest, 
+  removeHttpsFromUrl 
+} from './helpers';
 
 export const createGitPullRequestAction = () => {
     return createTemplateAction<{ 
@@ -26,6 +35,9 @@ export const createGitPullRequestAction = () => {
       targetBranch: string; 
       title: string;
       description: string; 
+      sourcePath: string;
+      targetPath: string;
+      commitMessage: string;
     }>({
         id: 'git:pull-request:create',
         schema: {
@@ -38,7 +50,7 @@ export const createGitPullRequestAction = () => {
                 title: 'Repository URL',
                 description: 'HTTPS URL for the Git repository',
               },
-                authToken: {
+              authToken: {
                 type: 'string',
                 title: 'Authorization Token',
                 description: 'The token to use for authorization to GitHub',
@@ -57,6 +69,21 @@ export const createGitPullRequestAction = () => {
                 type: 'string',
                 title: 'Pull Request Description',
                 description: 'The description for the pull request',
+              },
+              sourcePath: {
+                type: 'string',
+                title: 'Working Subdirectory',
+                description: 'Subdirectory of working directory to copy changes from',
+              },
+              targetPath: {
+                type: 'string',
+                title: 'Repository Subdirectory',
+                description: 'Subdirectory of repository to apply changes to',
+              },
+              commitMessage: {
+                type: 'string',
+                title: 'Commit Message',
+                description: 'Commit message in the Git repository',
               }
             },
           },
@@ -82,7 +109,40 @@ export const createGitPullRequestAction = () => {
         },
   
       async handler(ctx) {
-        
+        const { input } = ctx;
+        const { gitRepoUrl, authToken, targetBranch, title, description, commitMessage } = input;
+        const { sourcePath, targetPath } = input;
+
+        const gitRepoWithoutHttps = await removeHttpsFromUrl(gitRepoUrl);
+        const [domain, orgName, ...rest] = gitRepoWithoutHttps.split('/');
+
+        const git = simpleGit();
+        const user = `${orgName}`;
+
+        const fullSourcePath = `${ctx.workspacePath}/${sourcePath}`;
+        const fullTargetPath =`${ctx.workspacePath}/${targetPath}`;
+        const sourceBranch = `'backstage-'${uuid.v4()}`;
+        const finalCommitMessage = commitMessage.length !== 0  ? commitMessage : 'first commit!';
+
+        console.log('Git URL without HTTPS: ', gitRepoWithoutHttps);
+
+        const remoteUrl = `https://${user}:${authToken}@${gitRepoWithoutHttps}`;
+
+        await cloneGitRepo(git, remoteUrl);
+
+        // await copyGitChanges(fs,fullSourcePath,fullTargetPath);
+
+        await createAndCheckoutBranch(git,sourceBranch);
+
+        await commitAndPushGitChanges(git, './*', finalCommitMessage, sourceBranch);
+
+        const { targetBranchName, pullRequestUrl, pullRequestId} 
+              =  await createPullRequest(gitRepoWithoutHttps, authToken, sourceBranch, 
+                                  targetBranch, title, description);
+
+        ctx.output('targetBranchName', targetBranchName);
+        ctx.output('pullRequestUrl', pullRequestUrl);
+        ctx.output('pullRequestId', pullRequestId);
       },
     });
   };

@@ -66,7 +66,7 @@ export const createUnzipFileAction = () => {
 
         ctx.logger.info('Full input path ' + `${fullInputPath}`);
         
-        if(!ctx.input.monorepo){
+        if(ctx.input.monorepo){
           ctx.logger.info('Application is being generated as Multi-Repo.')
           const filenameWithoutExtension = path.parse(ctx.input.fileName).name;
           fullExtractPath = `${ctx.workspacePath}/${filenameWithoutExtension}`;

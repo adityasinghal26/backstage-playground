@@ -69,6 +69,12 @@ spec:
           enumNames:
           - 'Yes'
           - 'No'
+        gitRepoUrl:
+          type: string
+          title: Git Repository URL for Monorepo
+          ui:widget: uri
+          ui:options:
+            rows: 1
     - title: Application Type
       type: object
       required:
@@ -422,7 +428,7 @@ spec:
       action: fetch:template
       input:
         url: './content'
-        targetPath: ''
+        targetPath: '${{ parameters.name }}'
         values:
           name: ${{ parameters.name }}
           project: ${{ (parameters.repoUrl | parseRepoUrl).project }}
@@ -434,21 +440,43 @@ spec:
       action: fetch:template
       input:
         url: './content'
-        targetPath: '${{ parameters.name }}'
+        targetPath: ''
         values:
           name: ${{ parameters.name }}
           project: ${{ (parameters.repoUrl | parseRepoUrl).project }}
           repo: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
-    # - id: debug-wait
-    #   name: Debug Wait
-    #   action: debug:wait
-    #   input:
-    #     seconds: 25
+    - id: debug-wait
+      name: Debug Wait
+      action: debug:wait
+      input:
+        seconds: 25
+
+    # This step publishes the contents of the working directory to Azure.
+    - id: publish-monorepo
+      name: Publish Repository
+      if: ${{ parameters.monorepo === true }}
+      action: git:pull-request:create
+      input:
+        gitRepoUrl: ${{ parameters.gitRepoUrl }}
+        targetBranch: master
+        title: Merge ${{ parameters.name }} application 
+        description: This is ${{ parameters.name }} application repository generated using Backstage and JHipster
+        authToken: ${{ parameters.personalAccessToken }}
+        sourcePath: '${{ parameters.name }}'
+        targetPath: '${{ parameters.name }}'
+        commitMessage: 'Lets go!'
+
+    - id: debug-wait
+      name: Debug Wait
+      action: debug:wait
+      input:
+        seconds: 25
 
     # This step publishes the contents of the working directory to GitHub.
     - id: publish
       name: Publish Repository
+      if: ${{ parameters.monorepo === false }}
       action: publish:azure
       input:
         allowedHosts: ['dev.azure.com']
