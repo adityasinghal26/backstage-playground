@@ -50,6 +50,11 @@ integrations:
   azure:
     - host: dev.azure.com
       token: ${AZURE_TOKEN}
+
+azureDevOps:
+  host: dev.azure.com
+  token: ${AZURE_TOKEN}
+  organization: ORG1
       # credentials:
       #   - personalAccessToken: ${PERSONAL_ACCESS_TOKEN}
 
