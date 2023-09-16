@@ -184,6 +184,13 @@ const serviceEntityPage = (
     <EntityLayout.Route path="/todo" title="Todo">
       <EntityTodoContent />
     </EntityLayout.Route>
+    
+    <EntityLayout.Route
+      path="/feedback"
+      title="Feedback"
+      if={hasMSFormsAnnotation('feedback')}>
+      <MSFormContent name="feedback" />
+    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -208,17 +215,17 @@ const websiteEntityPage = (
       </Grid>
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      path="/feedback"
-      title="Feedback"
-      if={hasMSFormsAnnotation('feedback')}
-    >
-      <MSFormContent name="feedback" />
-    </EntityLayout.Route>
-
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
     </EntityLayout.Route>
+
+    <EntityLayout.Route
+      path="/feedback"
+      title="Feedback"
+      if={hasMSFormsAnnotation('feedback')}>
+      <MSFormContent name="feedback" />
+    </EntityLayout.Route>
+    
   </EntityLayout>
 );
 
