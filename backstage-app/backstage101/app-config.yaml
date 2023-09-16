@@ -85,6 +85,13 @@ kubernetes:
   clusterLocatorMethods:
     - type: 'config'
       clusters:
+        - url: https://kubernetes.default.svc
+          name: in-cluster
+          authProvider: 'serviceAccount'
+          skipTLSVerify: true
+          skipMetricsLookup: true
+          serviceAccountToken: ${IN_CLUSTER_SA_TOKEN}
+
         - url: ${K8S_CLUSTER1_URL}
           name: ${K8S_CLUSTER1_NAME}
           authProvider: 'serviceAccount'
@@ -109,6 +116,8 @@ catalog:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
       target: ../../examples/entities.yaml
+    - type: file
+      target: ../../examples/backstage-info.yaml
 
     # Local example template
     - type: file
