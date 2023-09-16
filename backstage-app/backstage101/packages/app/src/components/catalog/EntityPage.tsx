@@ -65,6 +65,7 @@ import {
   EntityAzureReadmeCard,
   isAzureDevOpsAvailable,
 } from '@backstage/plugin-azure-devops';
+import { MSFormContent, hasMSFormsAnnotation } from '@zcmander/backstage-plugin-msforms';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -211,6 +212,13 @@ const serviceEntityPage = (
     <EntityLayout.Route path="/todo" title="Todo">
       <EntityTodoContent />
     </EntityLayout.Route>
+    
+    <EntityLayout.Route
+      path="/feedback"
+      title="Feedback"
+      if={hasMSFormsAnnotation('feedback')}>
+      <MSFormContent name="feedback" />
+    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -238,6 +246,14 @@ const websiteEntityPage = (
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
     </EntityLayout.Route>
+
+    <EntityLayout.Route
+      path="/feedback"
+      title="Feedback"
+      if={hasMSFormsAnnotation('feedback')}>
+      <MSFormContent name="feedback" />
+    </EntityLayout.Route>
+    
   </EntityLayout>
 );
 
