@@ -14,3 +14,5 @@
  * limitations under the License.
  */
 export { createGitPullRequestAction } from './gitPullRequest';
+export { createGitCommitPushAction } from './gitCommitPush';
+export { getGitRepoDetailsAction } from './gitRepoDetails';
