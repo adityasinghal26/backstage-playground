@@ -126,6 +126,7 @@ catalog:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
       target: ../../examples/entities.yaml
+
     - type: file
       target: ../../examples/backstage-info.yaml
 
@@ -138,6 +139,12 @@ catalog:
     # Local example template
     - type: file
       target: ../../examples/jhipster/template.yaml
+      rules:
+        - allow: [Template]
+    
+    # Local example template
+    - type: file
+      target: ../../examples/jhipster-azure-devops/template.yaml
       rules:
         - allow: [Template]
 
