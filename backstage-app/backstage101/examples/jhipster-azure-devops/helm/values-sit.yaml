@@ -1,0 +1,139 @@
+# Disabled services
+disable:
+  frontend: false
+
+# Horizontal Pod Autoscaler
+hpa:
+  enable: true
+  apiVersion: 'autoscaling/v2'
+  replicas:
+    min: '1'
+    max: '1'
+  avgUtilization:
+    cpu: '70'
+
+# Deployment details
+namespace: 'sit'
+deployment:
+  apiVersion: 'apps/v1'
+  replicas: '1'
+  name: '${{ values.name | dump }}'
+terminationGracePeriodSeconds: '60'
+  
+# Image details
+image:
+  tag: 'tag'
+  pullsecret: 'myregistrykey'
+  registry: 'myregistry'
+  repository: '${{ values.name | dump }}'
+  
+# Springboot Backend container details
+backend:
+  cpu: '1'
+  memory: '1Gi'
+  container:
+    name: 'springboot'
+    port: '8080'
+
+# NGINX Frontend container details
+frontend:
+  cpu: '100m'
+  memory: '100Mi'
+  container:
+    name: 'nginx'
+    port: '80'
+
+# Database configuration details
+redis:
+  host: 'redis.redis.svc.cluster.local'
+  port: '6379'
+
+mongo:
+  username: 'mondbadmin'
+  host: 'mongodb.mongodb.svc.cluster.local'
+  port: '27017'
+
+elastic:
+  username: 'admin'
+  uri: 'https://opensearch.opensearch.svc.cluster.local:443'
+
+kafka:
+  port: '9092'
+  host: 'kafka.kafka.svc.cluster.local'
+  ip: 'kafka-ip'
+
+postgres:
+  username: 'postgres'
+  port: '5432'
+  host: 'postgres.postgres.svc.cluster.local'
+
+# DBsecret
+dbsecret:
+  name: 'database-creds'
+  key: 'password'
+
+# Elasticsearch details
+elasticsearch:
+  configMap:
+    name: 'es-mon-details'
+    apmEnv: 'apmEnv'
+    apmURL: 'apmURL'
+
+#webclient
+webclient:
+  responsetimeout: '10'
+  connecttimeout: '10'
+  readtimeout: '10'
+  writetimeout: '10'
+  retry:
+    count: '3'
+    backoff: '5'
+
+# APM details
+apm:
+  enable: false
+  image: 'docker.elastic.co/observability/apm-agent-java:1.39.0'
+  token: 'monitoring-apm-token'
+  log:
+    correlationflag: '"true"'
+    level: 'ERROR'
+  span:
+    profilingflag: '"true"'
+    included: 'com.mycompany.*'
+
+# Liveness Probe settings
+liveness:
+  enable: true
+  failureThreshold: '3'
+  initialDelaySeconds: '30'
+  periodSeconds: '10'
+  successThreshold: '1'
+  timeoutSeconds: '60'
+  path: '/management/health/liveness'
+
+# Readiness Probe settings
+readiness:
+  enable: true
+  failureThreshold: '3'
+  initialDelaySeconds: '30'
+  periodSeconds: '15'
+  successThreshold: '1'
+  timeoutSeconds: '60' 
+  path: '/management/health/readiness'   
+
+# Node Selector and Topology details
+nodeSelector:
+  enable: false
+  name: 'functional'
+  version: 'v1.24'
+topology:
+  enable: true
+  maxskew: '2'
+  unsatisfiable: 'DoNotSchedule'
+  key: 
+    hostname: 'kubernetes.io/hostname'
+    zone: 'topology.kubernetes.io/zone'
+    
+# hostAliases
+hostAliases:
+  enable: 'false'    
