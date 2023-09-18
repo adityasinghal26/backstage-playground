@@ -137,6 +137,7 @@ export const createGitCommitPushAction = () => {
         await git.add(`${gitPath}/*`)
         .addConfig('user.name',`${user}`,true,"global")
         .addConfig('user.email',`${email}`,true,"global")
+        .pull('origin',sourceBranch)
         .commit(finalCommitMessage)
         .push(['origin', sourceBranch], () => ctx.logger.info('Git push done.'))
         .catch((err: any) => ctx.logger.error(err));
