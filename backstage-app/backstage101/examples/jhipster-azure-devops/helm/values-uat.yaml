@@ -17,7 +17,7 @@ namespace: 'uat'
 deployment:
   apiVersion: 'apps/v1'
   replicas: '1'
-  name: '${{ values.name | dump }}'
+  name: '${{ values.name }}'
 terminationGracePeriodSeconds: '60'
   
 # Image details
@@ -25,7 +25,7 @@ image:
   tag: 'tag'
   pullsecret: 'myregistrykey'
   registry: 'myregistry'
-  repository: '${{ values.name | dump }}'
+  repository: '${{ values.name }}'
   
 # Springboot Backend container details
 backend:
@@ -60,7 +60,7 @@ elastic:
 kafka:
   port: '9092'
   host: 'kafka.kafka.svc.cluster.local'
-  ip: 'kafka-ip'
+  ip: '127.0.0.1'
 
 postgres:
   username: 'postgres'
@@ -136,4 +136,4 @@ topology:
     
 # hostAliases
 hostAliases:
-  enable: 'false'    
+  enable: false
