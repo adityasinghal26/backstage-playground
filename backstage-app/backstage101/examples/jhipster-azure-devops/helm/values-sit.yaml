@@ -17,7 +17,7 @@ namespace: 'sit'
 deployment:
   apiVersion: 'apps/v1'
   replicas: '1'
-  name: '${{ values.name }}'
+  name: '${{ values.dashName }}'
 terminationGracePeriodSeconds: '60'
   
 # Image details
@@ -25,7 +25,7 @@ image:
   tag: 'tag'
   pullsecret: 'myregistrykey'
   registry: 'myregistry'
-  repository: '${{ values.name }}'
+  repository: '${{ values.dashName }}'
   
 # Springboot Backend container details
 backend:

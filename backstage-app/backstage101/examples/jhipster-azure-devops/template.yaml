@@ -249,6 +249,12 @@ spec:
   # via the parameters above.
   steps:
     # Each step executes an action, in this case one templates files into the working directory.
+    - id: camel-dash
+      name: Process application
+      action: strings:camel:dash
+      input:
+        stringToModify: ${{ parameters.name }}
+
     - id: repo-details
       name: Fetch Repo Details
       action: git:details:get
@@ -338,6 +344,7 @@ spec:
         targetPath: '${{ parameters.name }}'
         values:
           name: ${{ parameters.name }}
+          dashName: ${{ steps['camel-dash'].output.updatedString }}
           project: ${{ steps['repo-details'].output.projectName }}
           repo: ${{ steps['repo-details'].output.repositoryName }}
 
@@ -356,8 +363,38 @@ spec:
         authToken: ${{ parameters.personalAccessToken }}
         branch: master
         sourcePath: '${{ parameters.name }}'
-        targetPath: '${{ parameters.name }}'
+        targetPath: ${{ steps['camel-dash'].output.updatedString }}
         commitMessage: ${{ parameters.name }} application folder generated using Backstage and JHipster
+        ownerUser: 'Aditya Singhal'
+        ownerEmail: 'aditya.singhal@test.com'
+
+    - id: fetch-helm
+      name: Fetch Helm
+      action: fetch:template
+      input:
+        url: './helm'
+        targetPath: 'helm'
+        values:
+          name: ${{ parameters.name }}
+          dashName: ${{ steps['camel-dash'].output.updatedString }}
+
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
+
+    # This step publishes the contents of the working directory to Azure.
+    - id: publish-helm
+      name: Publish Helm
+      action: git:commit:push
+      input:
+        gitRepoUrl: https://dev.azure.com/ORG1/PROJ1/_git/kubernetes-manifests
+        authToken: ${{ parameters.personalAccessToken }}
+        branch: master
+        sourcePath: 'helm'
+        targetPath: apps/${{ steps['camel-dash'].output.updatedString }}
+        commitMessage: ${{ parameters.name }} helm chart generated using Backstage and JHipster
         ownerUser: 'Aditya Singhal'
         ownerEmail: 'aditya.singhal@test.com'
 
@@ -381,10 +418,10 @@ spec:
           authorization: 'Basic ${{ parameters.base64EncodedToken }}'
         body:
           folder: '/backstage-jhipster'
-          name: ${{ parameters.name }}
+          name: ${{ steps['camel-dash'].output.updatedString }}
           configuration:
             type: 'yaml'
-            path: '${{ parameters.name }}/azure-pipelines.yml'
+            path: ${{ steps['camel-dash'].output.updatedString }}/azure-pipelines.yml
             repository:
               id: ${{ steps['repo-details'].output.repositoryId }}
               type: 'azureReposGit'
@@ -402,7 +439,7 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ parameters.gitRepoUrl }}?version=GB${{ steps['publish'].output.branchName }}
-        catalogInfoPath: '/${{ parameters.name }}/catalog-info.yaml'
+        catalogInfoPath: /${{ steps['camel-dash'].output.updatedString }}/catalog-info.yaml
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:

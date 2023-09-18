@@ -3,4 +3,4 @@ image:
   tag: 'tag'
   pullsecret: 'myregistrykey'
   registry: 'myregistry'
-  repository: '${{ values.name }}'
+  repository: '${{ values.dashName }}'

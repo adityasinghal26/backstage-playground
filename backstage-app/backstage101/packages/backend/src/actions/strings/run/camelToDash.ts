@@ -51,9 +51,11 @@ export const modifyStringCamelToDash = () => {
 
         ctx.logger.info('String to modify ' + `${stringToModify}`);
 
-        const camelToDashCase = str => str.replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);
-        ctx.logger.info('Updated string ' + `${camelToDashCase}`);
-        ctx.output('updatedString', camelToDashCase);
+        const camelToDash = str => str.replace(/([A-Z])/g, val => `-${val.toLowerCase()}`);
+
+        const updatedString = camelToDash(stringToModify);
+        ctx.logger.info('Updated string ' + `${updatedString}`);
+        ctx.output('updatedString', updatedString);
       },
     });
   };

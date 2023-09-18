@@ -3,10 +3,10 @@ kind: Component
 metadata:
   name: ${{ values.name }}
   annotations:
-    backstage.io/kubernetes-id: ${{ values.name }}
+    backstage.io/kubernetes-id: ${{ values.dashName }}
     dev.azure.com/project: ${{ values.project }}
-    dev.azure.com/build-definition: ${{ values.name  }}
-    argocd/app-name: ${{ values.name }}
+    dev.azure.com/build-definition: ${{ values.dashName  }}
+    argocd/app-name: ${{ values.dashName }}-sit
 spec:
   type: service
   owner: user:guest
