@@ -41,10 +41,10 @@ spec:
             # - github.com
             - dev.azure.com
             allowedOrganizations:
-            - org1
+            - WIPROTOPS
             allowedProjects:
-            - project1
-            - project2
+            - TOPS-PRODUCT
+            - CRUZE
         personalAccessToken:
           type: string
           title: Personal Access Token
@@ -446,11 +446,11 @@ spec:
           project: ${{ (parameters.repoUrl | parseRepoUrl).project }}
           repo: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
-    - id: debug-wait
-      name: Debug Wait
-      action: debug:wait
-      input:
-        seconds: 25
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
 
     # This step publishes the contents of the working directory to Azure.
     - id: publish-monorepo
@@ -467,11 +467,11 @@ spec:
         targetPath: '${{ parameters.name }}'
         commitMessage: 'Lets go!'
 
-    - id: debug-wait
-      name: Debug Wait
-      action: debug:wait
-      input:
-        seconds: 25
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
 
     # This step publishes the contents of the working directory to GitHub.
     - id: publish
@@ -501,12 +501,12 @@ spec:
           authorization: 'Basic ${{ parameters.base64EncodedToken }}'
         body:
           folder: ''
-          name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          name: ${{ parameters.name }}
           configuration:
             type: 'yaml'
             path: 'azure-pipelines.yml'
             repository:
-              id: ${{ steps['publish'].output.repositoryId }}
+              id: ${{ steps['publish-monorepo'].output.repositoryId }}
               type: 'azureReposGit'
     
     - id: create-ci-pipeline-multirepo
@@ -545,15 +545,15 @@ spec:
       if: ${{ parameters.monorepo === true }}
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        repoContentsUrl: ${{ parameters.gitRepoUrl }}?version=GB${{ steps['publish-monorepo'].output.sourceBranchName }}
+        catalogInfoPath: '/${{ parameters.name }}/catalog-info.yaml'
     - id: register-multirepo
       name: Register Multirepo
       if: ${{ parameters.monorepo === false }}
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: '/${{ parameters.name }}/catalog-info.yaml'
+        catalogInfoPath: '/catalog-info.yaml'
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:
@@ -561,6 +561,8 @@ spec:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Pull-Request
+        url: ${{ steps['publish-monorepo'].output.pullRequestUrl }}
       - title: Open in catalog
         icon: catalog
         entityRef: ${{ steps['register-monorepo'].output.entityRef }}
