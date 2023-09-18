@@ -141,6 +141,8 @@ export const createGitCommitPushAction = () => {
         .push(['origin', sourceBranch], () => ctx.logger.info('Git push done.'))
         .catch((err: any) => ctx.logger.error(err));
 
+        fs.rmSync(`${gitPath}`,{recursive: true, force: true});
+
         ctx.output('repositoryUrl', gitRepoUrl);
         ctx.output('branchName',branch);
       },
