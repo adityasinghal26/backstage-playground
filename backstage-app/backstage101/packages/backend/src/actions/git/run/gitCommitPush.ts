@@ -110,25 +110,25 @@ export const createGitCommitPushAction = () => {
         const fullTargetPath = targetPath.length !== 0 ? `${gitPath}/${targetPath}` : `${gitPath}`;
         const finalCommitMessage = commitMessage.length !== 0  ? commitMessage : 'first commit!';
 
-        console.log('Git URL without HTTPS: ', gitRepoWithoutHttps);
+        ctx.logger.info('Git URL without HTTPS: ' + `${gitRepoWithoutHttps}`);
 
         const remoteUrl = `https://${user}:${authToken}@${gitRepoWithoutHttps}`;
 
         // cloneGitRepo with authenticated repository URL
         await git.init();
         await git.clone(remoteUrl, gitPath)
-           .then(() => console.log('Git clone finished.'))
-          .catch((err: any) => console.log('Git clone failed: ', err));
+           .then(() => ctx.logger.info('Git clone finished.'))
+          .catch((err: any) => ctx.logger.error(err));
 
         // update current working directory for Git to add/commit/push changes
         // resolved remote 'origin' not found ERROR
         await git.cwd(gitPath);
         const remotes: RemoteWithoutRefs[] = await git.getRemotes(false);
-        console.log('Length of remote repos in working directory: ', remotes.length);
+        ctx.logger.info('Length of remote repos in working directory: ' + `${remotes.length}`);
 
         // checkout a temporary branch to push the latest changes
         await git.checkoutLocalBranch(sourceBranch)
-          .catch((err: any) => console.error(err));
+          .catch((err: any) => ctx.logger.error(err));
 
         // copy the fresh generated application to Git path, for monorepo structure
         fs.cpSync(fullSourcePath, fullTargetPath, { recursive: true });
@@ -138,8 +138,8 @@ export const createGitCommitPushAction = () => {
         .addConfig('user.name',`${user}`,true,"global")
         .addConfig('user.email',`${email}`,true,"global")
         .commit(finalCommitMessage)
-        .push(['origin', sourceBranch], () => console.log('push done'))
-        .catch((err: any) => console.log('Git changes failed:', err));
+        .push(['origin', sourceBranch], () => ctx.logger.info('Git push done.'))
+        .catch((err: any) => ctx.logger.error(err));
 
         ctx.output('repositoryUrl', gitRepoUrl);
         ctx.output('branchName',branch);

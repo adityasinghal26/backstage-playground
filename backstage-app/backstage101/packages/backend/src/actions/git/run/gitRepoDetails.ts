@@ -85,7 +85,7 @@ export const getGitRepoDetailsAction = () => {
             const orgUrl = `https://${domain}/${orgName}`;
             const token = authToken;
             
-            console.log('Organisation URL: ', orgUrl);  
+            ctx.logger.info('Organisation URL: '+ `${orgUrl}`);  
             
             const authHandler = azdev.getPersonalAccessTokenHandler(token); 
             const connection = new azdev.WebApi(orgUrl, authHandler);    
@@ -98,8 +98,13 @@ export const getGitRepoDetailsAction = () => {
             gitProjectName = projectName;
           }   
         } catch(err){
-          console.log('Repository details get failed: ', err)
+          ctx.logger.error(err);
         }
+
+        ctx.logger.info('Organization :' + `${gitOrgName}`);
+        ctx.logger.info('Project Name :' + `${gitProjectName}`);
+        ctx.logger.info('Repository Name :' + `${gitRepoName}`);
+        ctx.logger.info('Repository ID :' + `${gitRepoId}`);
 
         ctx.output('repositoryId', gitRepoId);
         ctx.output('repositoryName',gitRepoName);
