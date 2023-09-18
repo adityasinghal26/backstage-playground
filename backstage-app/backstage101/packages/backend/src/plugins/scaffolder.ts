@@ -5,10 +5,10 @@ import { createRouter } from '@backstage/plugin-scaffolder-backend';
 import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
-import { createCustomHttpBackstageAction } from '../actions/http-request-action/run/backstageRequest';
-import { createUnzipFileAction } from '../actions/unzip-file/run';
-import { createGitPullRequestAction } from '../actions/git/run/gitPullRequest';
-import { createGitCommitPushAction, getGitRepoDetailsAction } from '../actions/git';
+import { createCustomHttpBackstageAction } from '../actions/http-request-action';
+import { createUnzipFileAction } from '../actions/unzip-file';
+import { createGitPullRequestAction, createGitCommitPushAction, getGitRepoDetailsAction } from '../actions/git';
+import { modifyStringCamelToDash } from '../actions/strings';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -32,7 +32,8 @@ export default async function createPlugin(
     createUnzipFileAction(),
     createGitPullRequestAction(),
     createGitCommitPushAction(),
-    getGitRepoDetailsAction()  ]; 
+    getGitRepoDetailsAction(),
+    modifyStringCamelToDash()  ]; 
 
   return await createRouter({
     actions,
