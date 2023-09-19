@@ -126,9 +126,9 @@ export const createGitCommitPushAction = () => {
         const remotes: RemoteWithoutRefs[] = await git.getRemotes(false);
         ctx.logger.info('Length of remote repos in working directory: ' + `${remotes.length}`);
 
-        // checkout a temporary branch to push the latest changes
+        // checkout source branch to push the latest changes
         await git.checkoutLocalBranch(sourceBranch)
-          .catch((err: any) => ctx.logger.error(err));
+          .catch((err: any) => ctx.logger.error(err));      
 
         // copy the fresh generated application to Git path, for monorepo structure
         fs.cpSync(fullSourcePath, fullTargetPath, { recursive: true });
@@ -140,7 +140,10 @@ export const createGitCommitPushAction = () => {
         .pull('origin',sourceBranch)
         .commit(finalCommitMessage)
         .push(['origin', sourceBranch], () => ctx.logger.info('Git push done.'))
-        .catch((err: any) => ctx.logger.error(err));
+        .catch((err: any) => {
+          ctx.logger.error(err);
+          throw new Error('Git commit/push failed.')
+        });
 
         fs.rmSync(`${gitPath}`,{recursive: true, force: true});
 
