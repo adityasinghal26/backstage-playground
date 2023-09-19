@@ -9,6 +9,7 @@ import { createCustomHttpBackstageAction } from '../actions/http-request-action'
 import { createUnzipFileAction } from '../actions/unzip-file';
 import { createGitPullRequestAction, createGitCommitPushAction, getGitRepoDetailsAction } from '../actions/git';
 import { modifyStringCamelToDash } from '../actions/strings';
+import { checkEntityIfExistsAction } from '../actions/catalog';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -29,6 +30,7 @@ export default async function createPlugin(
   const actions = [...builtInActions, 
     createHttpBackstageAction({ discovery }), 
     createCustomHttpBackstageAction({ discovery }),
+    checkEntityIfExistsAction({ catalogClient }),
     createUnzipFileAction(),
     createGitPullRequestAction(),
     createGitCommitPushAction(),

@@ -249,6 +249,12 @@ spec:
   # via the parameters above.
   steps:
     # Each step executes an action, in this case one templates files into the working directory.
+    - id: entity-check
+      name: Check application exists
+      action: catalog:entity:exists
+      input:
+        entityRef: component:default/${{ parameters.name }}
+    
     - id: camel-dash
       name: Process application
       action: strings:camel:dash
