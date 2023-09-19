@@ -37,6 +37,7 @@
     "@backstage/plugin-techdocs-backend": "^1.6.3",
     "@backstage/plugin-todo-backend": "^0.1.44",
     "@roadiehq/scaffolder-backend-module-http-request": "^4.0.10",
+    "adm-zip": "^0.5.10",
     "app": "link:../app",
     "azure-devops-node-api": "^12.1.0",
     "better-sqlite3": "^8.0.0",
