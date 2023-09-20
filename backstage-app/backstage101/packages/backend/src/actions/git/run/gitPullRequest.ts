@@ -21,7 +21,7 @@ import { RemoteWithoutRefs, simpleGit } from 'simple-git';
 import uuid from 'uuid';
 import * as azdev from 'azure-devops-node-api';
 import * as azgit from 'azure-devops-node-api/GitApi';
-import { GitCommitRef, GitPullRequest, GitPullRequestCompletionOptions, PullRequestStatus } from 'azure-devops-node-api/interfaces/GitInterfaces';
+import { GitPullRequest } from 'azure-devops-node-api/interfaces/GitInterfaces';
 import fs from 'node:fs';
 import { removeHttpsFromUrl } from './helpers';
 
@@ -197,31 +197,11 @@ export const createGitPullRequestAction = () => {
             pullRequestUrl = (await gitPullRequestCreated).url!;
             pullRequestId = (await gitPullRequestCreated).pullRequestId!;
 
-            let pullRequestCompletionOptions: GitPullRequestCompletionOptions = <GitPullRequestCompletionOptions>{
-              bypassPolicy: true,
-              bypassReason: 'Initial commit',
-              deleteSourceBranch: false,
-            }
-
-            const pullRequestStatus: PullRequestStatus = PullRequestStatus.Completed;
-
-            let gitPullRequestToUpdate: GitPullRequest = <GitPullRequest>{
-              lastMergeSourceCommit: gitPullRequestCreated.lastMergeSourceCommit,
-              completionOptions: pullRequestCompletionOptions,
-              status: pullRequestStatus,
-            }; 
-            
-            const updatedGitPullRequest: GitPullRequest = await gitClient.updatePullRequest(gitPullRequestToUpdate,gitRepoId,pullRequestId,projectName)
-            const updatedPrStatus = updatedGitPullRequest.status!;
-            const updatedPrClosedDate = updatedGitPullRequest.closedDate!;
-
             console.log('Pull request success: ');
             console.log('sourceBranchName: ', sourceBranch);
             console.log('targetBranchName: ', targetBranchName);
             console.log('pullRequestUrl: ', pullRequestUrl);
             console.log('pullRequestId: ', pullRequestId);
-            console.log('updatedPrStatus: ', updatedPrStatus);
-            console.log('updatedPrClosedDate: ', updatedPrClosedDate);
           }   
         } catch(err){
           console.log('Pull Request creation failed: ', err)
