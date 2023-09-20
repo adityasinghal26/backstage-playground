@@ -37,13 +37,17 @@
     "@backstage/plugin-techdocs-backend": "^1.6.3",
     "@backstage/plugin-todo-backend": "^0.1.44",
     "@roadiehq/scaffolder-backend-module-http-request": "^4.0.10",
+    "adm-zip": "^0.5.10",
     "app": "link:../app",
+    "azure-devops-node-api": "^12.1.0",
     "better-sqlite3": "^8.0.0",
     "dockerode": "^3.3.1",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "pg": "^8.3.0",
+    "simple-git": "^3.19.1",
     "unzipper": "^0.10.14",
+    "uuid": "^9.0.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -51,7 +55,8 @@
     "@types/dockerode": "^3.3.0",
     "@types/express": "^4.17.6",
     "@types/express-serve-static-core": "^4.17.5",
-    "@types/luxon": "^2.0.4"
+    "@types/luxon": "^2.0.4",
+    "uuid": "^9.0.1"
   },
   "files": [
     "dist"

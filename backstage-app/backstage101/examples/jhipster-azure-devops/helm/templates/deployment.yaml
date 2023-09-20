@@ -1,0 +1,195 @@
+apiVersion: {{ .Values.deployment.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    backstage.io/kubernetes-id: {{ .Values.deployment.name }}
+spec:
+  {{- if not .Values.hpa.enable }}
+  replicas: {{ .Values.deployment.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+        backstage.io/kubernetes-id: {{ .Values.deployment.name }}
+    spec:
+      {{- if .Values.topology.enable }}
+      topologySpreadConstraints:
+      - labelSelector:
+          matchLabels:
+            app: {{ .Values.deployment.name }}
+        maxSkew: {{ .Values.topology.maxskew }}
+        topologyKey: {{ .Values.topology.key.hostname }}
+        whenUnsatisfiable: {{ .Values.topology.unsatisfiable }}
+      - labelSelector:
+          matchLabels:
+            app: {{ .Values.deployment.name }}
+        maxSkew: {{ .Values.topology.maxskew }}
+        topologyKey: {{ .Values.topology.key.zone }}
+        whenUnsatisfiable: {{ .Values.topology.unsatisfiable }}
+      {{- end }}
+      {{- if .Values.apm.enable }}
+      volumes:
+      - name: elastic-apm-agent
+        emptyDir: {}
+      initContainers:
+      - name: elastic-java-agent
+        image: {{ .Values.apm.image }}
+        volumeMounts:
+        - mountPath: /elastic/apm/agent
+          name: elastic-apm-agent
+        command: ['cp', '-v', '/usr/agent/elastic-apm-agent.jar', '/elastic/apm/agent']
+      {{- end }}
+      {{- if .Values.hostAliases.enable }}
+      hostAliases:
+      - ip: {{ .Values.kafka.ip }}
+        hostnames:
+        - kafkaserver
+      {{- end }}
+      containers:   
+      - name: {{ .Values.backend.container.name }}
+        image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - containerPort: {{ .Values.backend.container.port }}
+          protocol: TCP
+        {{- if .Values.liveness.enable }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.liveness.path }}
+            port: {{ .Values.backend.container.port }}
+            scheme: HTTP            
+          failureThreshold: {{ .Values.liveness.failureThreshold }}
+          initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.liveness.periodSeconds }}
+          successThreshold: {{ .Values.liveness.successThreshold }}
+          timeoutSeconds: {{ .Values.liveness.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.readiness.enable }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.readiness.path }}
+            port: {{ .Values.backend.container.port }}
+            scheme: HTTP
+          failureThreshold: {{ .Values.readiness.failureThreshold }}
+          initialDelaySeconds: {{ .Values.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readiness.periodSeconds }}
+          successThreshold: {{ .Values.readiness.successThreshold }}
+          timeoutSeconds: {{ .Values.readiness.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.apm.enable }}
+        volumeMounts:
+        - mountPath: /elastic/apm/agent
+          name: elastic-apm-agent
+        {{- end }}
+        env:
+        {{- if .Values.apm.enable }}
+        - name: ELASTIC_APM_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              key: {{ .Values.elasticsearch.configMap.apmURL }}
+              name: {{ .Values.elasticsearch.configMap.name }}
+        - name: ELASTIC_APM_SERVICE_NAME
+          value: {{ .Values.deployment.name }}
+        - name: ELASTIC_APM_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              key: {{ .Values.elasticsearch.configMap.apmEnv }}
+              name: {{ .Values.elasticsearch.configMap.name }}
+        - name: ELASTIC_APM_LOG_LEVEL
+          value: {{ .Values.apm.log.level }}
+        - name: ELASTIC_APM_ENABLE_LOG_CORRELATION
+          value: {{ .Values.apm.log.correlationflag }}
+        - name: ELASTIC_APM_PROFILING_INFERRED_SPANS_ENABLED
+          value: {{ .Values.apm.span.profilingflag }}
+        - name: ELASTIC_APM_PROFILING_INFERRED_SPANS_INCLUDED_CLASSES
+          value: {{ .Values.apm.span.included }}
+        - name: ELASTIC_APM_SERVICE_NODE_NAME
+          valueFrom:
+           fieldRef:
+             apiVersion: v1
+             fieldPath: metadata.name
+        - name: ELASTIC_APM_SECRET_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.apm.token }}
+              key: secret-token
+        - name: JAVA_TOOL_OPTIONS
+          value: -javaagent:/elastic/apm/agent/elastic-apm-agent.jar
+        {{- end }}
+        - name: REDIS_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.redis
+              name: {{ .Values.deployment.name }}
+        - name: MONGO_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.mongo
+              name: {{ .Values.deployment.name }}
+        - name: ELASTIC_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.elastic
+              name: {{ .Values.deployment.name }}              
+        - name: POSTGRES_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.postgres
+              name: {{ .Values.deployment.name }}
+        - name: KAFKA_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.kafka
+              name: {{ .Values.deployment.name }}  
+        - name: WEBCLIENT_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.webclient
+              name: {{ .Values.deployment.name }}                
+        - name: DB_CONF
+          value: $(REDIS_CONF) $(MONGO_CONF) $(ELASTIC_CONF) $(POSTGRES_CONF) $(KAFKA_CONF) $(WEBCLIENT_CONF)
+        - name: DB_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.dbsecret.name }}
+              key: {{ .Values.dbsecret.key }}  
+        - name: JAVA_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.base
+              name: {{ .Values.deployment.name }}
+        - name: MEMORY_CONF
+          valueFrom:
+            configMapKeyRef:
+              key: app.memory
+              name: {{ .Values.deployment.name }}
+        - name: JAVA_OPTS
+          value: $(JAVA_CONF) $(MEMORY_CONF) $(DB_CONF) $(DB_SECRET)
+        resources:
+          requests:
+            cpu: {{ .Values.backend.cpu }}
+            memory: {{ .Values.backend.memory }}
+      {{- if not .Values.disable.frontend }}
+      - name: {{ .Values.frontend.container.name }}
+        image: {{ .Values.image.registry }}/{{ .Values.image.repository }}-web:{{ .Values.image.tag }}
+        ports:
+        - containerPort: {{ .Values.frontend.container.port }}
+          protocol: TCP
+        resources:
+          requests:
+            cpu: {{ .Values.frontend.cpu }}
+            memory: {{ .Values.frontend.memory }}
+      {{- end }}
+      imagePullSecrets:
+      - name: {{ .Values.image.pullsecret }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- if .Values.nodeSelector.enable }}
+      nodeSelector:
+        name: {{ .Values.nodeSelector.name }}
+        node.info/kubeletVersion: {{ .Values.nodeSelector.version }}
+      {{- end }}

@@ -2,9 +2,9 @@ apiVersion: scaffolder.backstage.io/v1beta3
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: jhipster-template
-  title: JHipster Template
-  description: Template that generates a JHipster application based on user inputs
+  name: jhipster-azure-devops
+  title: JHipster Azure DevOps
+  description: Template that generates a JHipster application in Azure DevOps
 spec:
   owner: admin:aditya.singhal
   type: service
@@ -15,8 +15,21 @@ spec:
     - title: Application Name
       type: object
       required:
+      - applicationGroup
       - name
+      - personalAccessToken
+      - base64EncodedToken
       properties:
+        applicationGroup:
+          type: string
+          title: The group name to which application belongs to.
+          ui:widget: select
+          enum:
+          - app1
+          - app2
+          enumNames:
+          - 'APP-1'
+          - 'APP-2'
         name:
           type: string
           title: Unique name of the application service
@@ -24,27 +37,6 @@ spec:
           ui:autofocus: 'true'
           ui:options:
             rows: 5
-    - title: Repository Location
-      description: URL of the repository
-      type: object
-      required:
-      - repoUrl
-      - personalAccessToken
-      - base64EncodedToken
-      properties:
-        repoUrl:
-          type: string
-          title: Repository Location
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-            # - github.com
-            - dev.azure.com
-            allowedOrganizations:
-            - org1
-            allowedProjects:
-            - project1
-            - project2
         personalAccessToken:
           type: string
           title: Personal Access Token
@@ -58,23 +50,35 @@ spec:
           ui:description: Run command `mypat=:pat && echo -n $mypat | base64` in linux terminal to generate base64 encoded token. Replace pat with actual token value.
           ui:options:
             rows: 1
-        monorepo:
-          type: boolean
-          title: Do you want to generate application as MonoRepo?
-          ui:widget: select
-          default: true
-          enum:
-          - true
-          - false
-          enumNames:
-          - 'Yes'
-          - 'No'
-        gitRepoUrl:
-          type: string
-          title: Git Repository URL for Monorepo
-          ui:widget: uri
-          ui:options:
-            rows: 1
+        # gitRepoUrl:
+        #   type: string
+        #   title: Git Repository URL for application generation
+        #  readOnly: false
+      dependencies:
+        applicationGroup:
+          oneOf:
+          - properties:
+              applicationGroup:
+                enum:
+                - app1
+              gitRepoUrl:
+                type: string
+                title: Git Repository
+                enum: 
+                - https://dev.azure.com/ORG1/PROJ1/_git/repo-1
+            required:
+            - gitRepoUrl
+          - properties:
+              applicationGroup:
+                enum:
+                - app2
+              gitRepoUrl:
+                type: string
+                title: Git Repository
+                enum: 
+                - https://dev.azure.com/ORG1/PROJ1/_git/repo-1
+            required:
+            - gitRepoUrl
     - title: Application Type
       type: object
       required:
@@ -86,11 +90,9 @@ spec:
           default: Monolithic Application (recommended for simple projects)
           ui:widget: select
           enum:
-          - monolith
           - microservice
           - gateway
           enumNames:
-          - Monolithic Application (recommended for simple projects)
           - Microservice Application
           - Microservice Gateway
     - title: Server Side Options
@@ -116,22 +118,13 @@ spec:
           type: number
           title: On which port would like your server to run? It should be unique to avoid port conflicts
           default: 8080
-          maxLength: 4
-          ui:options:
-            rows: 1
+          readOnly: true
         serviceDiscoveryType:
-          type: string
+          type: boolean
           title: Do you want to use the JHipster Registry to configure, monitor and scale your application?
           ui:widget: select
-          default: eureka
-          enum:
-          - false
-          - eureka
-          - consul
-          enumNames:
-          - 'No'
-          - 'Yes'
-          - 'No, use Consul as an alternative solution (Uses Spring Cloud Consul)'
+          default: false
+          readOnly: true
         authenticationType:
           type: string
           title: Which type of authentication would you like to use?
@@ -139,12 +132,8 @@ spec:
           default: jwt
           enum:
           - jwt
-          - oauth2
-          - session
           enumNames:
           - JWT authentication (stateless, with a token)
-          - OAuth 2.0 / OIDC Authentication (stateful, works with KeyCloak and Okta)
-          - HTTP Session Authentication (stateful, default Spring Security mechanism)
         databaseType:
           type: string
           title: Which type of database would you like to use?
@@ -152,18 +141,8 @@ spec:
           default: sql
           enum:
           - sql
-          - mongodb
-          - cassandra
-          - couchbase
-          - neo4j
-          - no
           enumNames:
-          - SQL (H2, MySQL, MariaDB, PostgreSQL, Oracle, MSSQL)
-          - MongoDB
-          - Cassandra
-          - Couchbase
-          - Neo4j
-          - No database     
+          - SQL (H2, MySQL, MariaDB, PostgreSQL, Oracle, MSSQL) 
         prodDatabaseType:
           type: string
           title: Which production database would you like to use?
@@ -171,105 +150,51 @@ spec:
           default: postgresql
           enum:
           - postgresql
-          - mysql
-          - mariadb
-          - oracle
-          - mssql
           - mongodb
-          - cassandra
-          - couchbase
-          - neo4j
-          - no
           enumNames:
           - PostgreSQL
-          - MySQL
-          - MariaDB
-          - Oracle (Please follow our documentation to use the Oracle proprietory driver)
-          - Microsoft SQL Server
           - MongoDB
-          - Cassandra
-          - Couchbase
-          - Neo4j
-          - No database
         devDatabaseType:
           type: string
           title: Which development database would you like to use?
           ui:widget: select
           default: postgresql
           enum:
-          - h2Disk
           - h2Memory
           - postgresql
-          - mysql
-          - mariadb
-          - oracle
-          - mssql
           - mongodb
-          - cassandra
-          - couchbase
-          - neo4j
-          - no
           enumNames:
-          - H2 with disk-based persistence
           - H2 with in-memory persistence
           - PostgreSQL
-          - MySQL
-          - MariaDB
-          - Oracle (Please follow our documentation to use the Oracle proprietory driver)
-          - Microsoft SQL Server
           - MongoDB
-          - Cassandra
-          - Couchbase
-          - Neo4j
-          - No database
         cacheProvider:
           type: string
           title: Which type of database would you like to use?
           ui:widget: select
           default: redis
           enum:
-          - ehcache
-          - caffeine
-          - hazelcast
-          - infinispan
-          - memcached
           - redis
-          - no
           enumNames:
-          - Yes, with ehCache (local cache, for a single node)
-          - Yes, with Caffeine (local cache, for a single node)
-          - Yes, with HazelCast (distributed cache, for multiple nodes)
-          - Yes, with Infinispan (hybrid cache, for multiple nodes)
-          - Yes, with MemCached (distributed cache)
           - Yes, with Redis (single server)
-          - No 
         enableHibernateCache:
           type: boolean
           title: Do you want to use Hibernate 2nd level cache?
           ui:widget: select
-          default: true
-          enum:
-          - true
-          - false
-          enumNames:
-          - 'Yes'
-          - 'No'
+          default: false
+          readOnly: true
         buildTool:
           type: string
           title: Would you like to use Maven or Gradle for building the backend?
           ui:widget: select
           default: gradle
           enum:
-          - maven
           - gradle
           enumNames:
-          - 'Maven'
           - 'Gradle'
     - title: Client Side Options
       type: object
       required:
       - clientFramework
-      - withAdminUi
       properties:
         clientFramework:
           type: string
@@ -278,17 +203,8 @@ spec:
           ui:widget: select
           enum:
           - angularX
-          - react
-          - vue
           enumNames:
           - Angular
-          - React
-          - Vue
-        withAdminUi:
-          type: boolean
-          title: Do you want to generate the admin UI?
-          default: true
-          ui:widget: select
     - title: Internationalization Options
       type: object
       properties:
@@ -328,21 +244,6 @@ spec:
               enableTranslation:
                 enum:
                 - false
-    - title: Testing Options
-      type: object
-      properties:
-        testFrameworks:
-          type: array
-          title: Besides JUnit and Jest, which testing frameworks would you like to use?
-          items:
-            type: string
-            enum:
-            - Gatling
-            - Cucumber
-            - Cypress
-            - Protractor (deprecated)
-          uniqueItems: true
-          ui:widget: checkboxes
 
   # These steps are executed in the scaffolder backend, using data that we gathered
   # via the parameters above.
@@ -399,14 +300,14 @@ spec:
             buildTool: ${{ parameters.buildTool }}
             useSass: true
             clientPackageManager: npm
-            testFrameworks: ${{ parameters.testFrameworks }}
+            testFrameworks: []
             enableTranslation: ${{ parameters.enableTranslation }}
             nativeLanguage: ${{ parameters.nativeLanguage }}
             languages:
             - en
             clientFramework: ${{ parameters.clientFramework }}
             jhiPrefix: jhi
-            withAdminUi: ${{ parameters.withAdminUi }}
+            withAdminUi: false
             blueprints: []
       output:
         getResponse: '${{ steps.jhipster_request.output.body }}'
@@ -423,7 +324,7 @@ spec:
       name: Unzip File
       action: unzip:file:create
       input:
-        monorepo: ${{ parameters.monorepo }}
+        monorepo: true
         absoluteFilePath: '/tmp'
         fileName: '${{ parameters.name }}.zip'
         extractPath: '/tmp'
@@ -441,29 +342,17 @@ spec:
     #    contents: '${{ steps.jhipster_request.output.body }}'
     #    filename: 'response_body.zip'
 
-    - id: fetch-catalog-monorepo
-      name: Fetch Catalog (Monorepo)
-      if: ${{ parameters.monorepo === true }}
+    - id: fetch-catalog
+      name: Fetch Catalog
       action: fetch:template
       input:
         url: './content'
         targetPath: '${{ parameters.name }}'
         values:
           name: ${{ parameters.name }}
+          dashName: ${{ steps['camel-dash'].output.updatedString }}
           project: ${{ steps['repo-details'].output.projectName }}
           repo: ${{ steps['repo-details'].output.repositoryName }}
-
-    - id: fetch-catalog-multirepo
-      name: Fetch Catalog (Multirepo)
-      if: ${{ parameters.monorepo === false }}
-      action: fetch:template
-      input:
-        url: './content'
-        targetPath: ''
-        values:
-          name: ${{ parameters.name }}
-          project: ${{ (parameters.repoUrl | parseRepoUrl).project }}
-          repo: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
     # - id: debug-wait
     #   name: Debug Wait
@@ -472,9 +361,8 @@ spec:
     #     seconds: 25
 
     # This step publishes the contents of the working directory to Azure.
-    - id: publish-monorepo
+    - id: publish
       name: Publish Application
-      if: ${{ parameters.monorepo === true }}
       action: git:commit:push
       input:
         gitRepoUrl: ${{ parameters.gitRepoUrl }}
@@ -486,6 +374,16 @@ spec:
         ownerUser: 'Aditya Singhal'
         ownerEmail: 'aditya.singhal@test.com'
 
+    - id: fetch-helm
+      name: Fetch Helm
+      action: fetch:template
+      input:
+        url: './helm'
+        targetPath: 'helm'
+        values:
+          name: ${{ parameters.name }}
+          dashName: ${{ steps['camel-dash'].output.updatedString }}
+
     # - id: debug-wait
     #   name: Debug Wait
     #   action: debug:wait
@@ -493,21 +391,27 @@ spec:
     #     seconds: 25
 
     # This step publishes the contents of the working directory to Azure.
-    - id: publish-multirepo
-      name: Publish Repository
-      if: ${{ parameters.monorepo === false }}
-      action: publish:azure
+    - id: publish-helm
+      name: Publish Helm
+      action: git:commit:push
       input:
-        allowedHosts: ['dev.azure.com']
-        description: This is ${{ parameters.name }} application repository generated using Backstage and JHipster
-        repoUrl: ${{ parameters.repoUrl }}
-        branchName: ${{ parameters.name }}
-        title: ${{ parameters.name }}
-        token: ${{ parameters.personalAccessToken }}
+        gitRepoUrl: https://dev.azure.com/ORG1/PROJ1/_git/kubernetes-manifests
+        authToken: ${{ parameters.personalAccessToken }}
+        branch: master
+        sourcePath: 'helm'
+        targetPath: apps/${{ steps['camel-dash'].output.updatedString }}
+        commitMessage: ${{ parameters.name }} helm chart generated using Backstage and JHipster
+        ownerUser: 'Aditya Singhal'
+        ownerEmail: 'aditya.singhal@test.com'
 
-    - id: create-ci-pipeline-monorepo
-      name: Create Azure CI (Monorepo)
-      if: ${{ parameters.monorepo === true }}
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
+
+    - id: create-ci-pipeline
+      name: Create Azure CI
       action: custom:http:request
       input:
         name: ${{ parameters.name }}
@@ -527,29 +431,6 @@ spec:
             repository:
               id: ${{ steps['repo-details'].output.repositoryId }}
               type: 'azureReposGit'
-    
-    - id: create-ci-pipeline-multirepo
-      name: Create Azure CI (Multirepo)
-      if: ${{ parameters.monorepo === false }}
-      action: custom:http:request
-      input:
-        name: ${{ parameters.name }}
-        method: 'POST'
-        useProxy: false
-        baseUrl: https://dev.azure.com
-        path: '/${{ (parameters.repoUrl | parseRepoUrl).organization }}/${{ (parameters.repoUrl | parseRepoUrl).project }}/_apis/pipelines?api-version=7.0'
-        headers:
-          content-type: 'application/json'
-          authorization: 'Basic ${{ parameters.base64EncodedToken }}'
-        body:
-          folder: ''
-          name: ${{ parameters.name }}
-          configuration:
-            type: 'yaml'
-            path: '${{ parameters.name }}/azure-pipelines.yml'
-            repository:
-              id: ${{ steps['publish'].output.repositoryId }}
-              type: 'azureReposGit'
 
     # - id: debug-log
     #   name: Debug Log
@@ -559,32 +440,19 @@ spec:
     #     message: Input body sent ${{ steps['create-ci-pipeline-monorepo'].input.body }} Output configured ${{ steps['create-ci-pipeline-monorepo'].output.code }} and headers ${{ steps['create-ci-pipeline-monorepo'].output.headers }} and body ${{ steps['create-ci-pipeline-monorepo'].output.body }}
 
     # The final step is to register our new component in the catalog.
-    - id: register-monorepo
-      name: Register Monorepo
-      if: ${{ parameters.monorepo === true }}
+    - id: register
+      name: Register Catalog
       action: catalog:register
       input:
-        repoContentsUrl: ${{ parameters.gitRepoUrl }}?version=GB${{ steps['publish-monorepo'].output.branchName }}
+        repoContentsUrl: ${{ parameters.gitRepoUrl }}?version=GB${{ steps['publish'].output.branchName }}
         catalogInfoPath: /${{ steps['camel-dash'].output.updatedString }}/catalog-info.yaml
-    - id: register-multirepo
-      name: Register Multirepo
-      if: ${{ parameters.monorepo === false }}
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:
     # getResponse: '{{ steps.jhipster_request.output.body }}'
     links:
       - title: Repository
-        url: ${{ steps['publish-monorepo'].output.repositoryUrl }}
-      - title: Repository
-        url: ${{ steps['publish-multirepo'].output.remoteUrl }}
+        url: ${{ steps['publish'].output.repositoryUrl }}
       - title: Open in catalog
         icon: catalog
-        entityRef: ${{ steps['register-monorepo'].output.entityRef }}
-      - title: Open in catalog
-        icon: catalog
-        entityRef: ${{ steps['register-multirepo'].output.entityRef }}
+        entityRef: ${{ steps['register'].output.entityRef }}

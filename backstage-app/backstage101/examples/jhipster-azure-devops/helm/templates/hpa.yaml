@@ -1,0 +1,23 @@
+{{- if .Values.hpa.enable }}
+apiVersion: {{ .Values.hpa.apiVersion }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    backstage.io/kubernetes-id: {{ .Values.deployment.name }}
+spec:
+  scaleTargetRef:
+    apiVersion: {{ .Values.deployment.apiVersion }}
+    kind: Deployment
+    name: {{ .Values.deployment.name }}
+  minReplicas: {{ .Values.hpa.replicas.min }}
+  maxReplicas: {{ .Values.hpa.replicas.max }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        averageUtilization: {{ .Values.hpa.avgUtilization.cpu }}
+        type: Utilization
+{{- end }}

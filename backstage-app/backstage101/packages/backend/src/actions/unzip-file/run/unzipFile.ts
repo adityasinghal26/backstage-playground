@@ -16,10 +16,7 @@
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import path from 'path';
-// import zlib from 'zlib';
-import unzipper from 'unzipper';
-// import { pipeline } from 'node:stream';
-// import JSZip from 'jszip';
+import AdmZip from 'adm-zip';
 import fs from 'node:fs';
 
 export const createUnzipFileAction = () => {
@@ -66,8 +63,8 @@ export const createUnzipFileAction = () => {
 
         ctx.logger.info('Full input path ' + `${fullInputPath}`);
         
-        if(!ctx.input.monorepo){
-          ctx.logger.info('Application is being generated as Multi-Repo.')
+        if(ctx.input.monorepo){
+          ctx.logger.info('Application is being generated as Mono-Repo.')
           const filenameWithoutExtension = path.parse(ctx.input.fileName).name;
           fullExtractPath = `${ctx.workspacePath}/${filenameWithoutExtension}`;
 
@@ -80,17 +77,11 @@ export const createUnzipFileAction = () => {
           }) 
         }
 
-        // const unzip = zlib.createUnzip();
+        // Using AdmZip with fullInputPath to extract files
+        // to fullExtractPath (i.e. folder with same name as application in workspace)
         // const input = fs.createReadStream(fullInputPath);
-        // const output = fs.createWriteStream(fullExtractPath);
-        // pipeline(input, unzip, output, (error) => {
-        //    if (error) console.log(error);
-        // });
-        fs.createReadStream(fullInputPath)
-          .pipe(unzipper.Extract({ path: fullExtractPath }))
-          .on("close", () => {
-           ctx.logger.info("Files unzipped successfully");
-        });
+        const zip = new AdmZip(`${fullInputPath}`);
+        zip.extractAllTo(`${fullExtractPath}`);
       },
     });
   };
