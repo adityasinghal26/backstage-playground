@@ -24,7 +24,7 @@ backend:
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin: http://localhost:3000
+    origin: ${BACKEND_URL}
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   # This is for local development only, it is not recommended to use this in production
@@ -111,7 +111,13 @@ kubernetes:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers: {}
+  environment: production
+  providers:
+    github:
+      production:
+        clientId: github-oauth-client-id
+        clientSecret: github-oauth-client-secret
+
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
