@@ -2,7 +2,8 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ${{ values.name | dump }}
-  annotations:
+  annotations: 
+    backstage.io/techdocs-ref: dir:.
     backstage.io/kubernetes-id: ${{ values.name | dump }}
     dev.azure.com/project: ${{ values.project | dump }}
     dev.azure.com/build-definition: ${{ values.repo | dump }}
