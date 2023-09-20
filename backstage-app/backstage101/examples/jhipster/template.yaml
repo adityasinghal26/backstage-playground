@@ -41,10 +41,10 @@ spec:
             # - github.com
             - dev.azure.com
             allowedOrganizations:
-            - WIPROTOPS
+            - org1
             allowedProjects:
-            - TOPS-PRODUCT
-            - CRUZE
+            - project1
+            - project2
         personalAccessToken:
           type: string
           title: Personal Access Token
@@ -348,6 +348,25 @@ spec:
   # via the parameters above.
   steps:
     # Each step executes an action, in this case one templates files into the working directory.
+    - id: entity-check
+      name: Check application exists
+      action: catalog:entity:exists
+      input:
+        entityRef: component:default/${{ parameters.name }}
+    
+    - id: camel-dash
+      name: Process application
+      action: strings:camel:dash
+      input:
+        stringToModify: ${{ parameters.name }}
+
+    - id: repo-details
+      name: Fetch Repo Details
+      action: git:details:get
+      input:
+        gitRepoUrl: ${{ parameters.gitRepoUrl }}
+        authToken: ${{ parameters.personalAccessToken }}
+
     - id: jhipster_request
       name: JHipster Generation
       action: custom:http:request
@@ -431,8 +450,8 @@ spec:
         targetPath: '${{ parameters.name }}'
         values:
           name: ${{ parameters.name }}
-          project: ${{ (parameters.repoUrl | parseRepoUrl).project }}
-          repo: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          project: ${{ steps['repo-details'].output.projectName }}
+          repo: ${{ steps['repo-details'].output.repositoryName }}
 
     - id: fetch-catalog-multirepo
       name: Fetch Catalog (Multirepo)
@@ -454,18 +473,18 @@ spec:
 
     # This step publishes the contents of the working directory to Azure.
     - id: publish-monorepo
-      name: Publish Repository
+      name: Publish Application
       if: ${{ parameters.monorepo === true }}
-      action: git:pull-request:create
+      action: git:commit:push
       input:
         gitRepoUrl: ${{ parameters.gitRepoUrl }}
-        targetBranch: master
-        title: Merge ${{ parameters.name }} application 
-        description: This is ${{ parameters.name }} application repository generated using Backstage and JHipster
         authToken: ${{ parameters.personalAccessToken }}
+        branch: master
         sourcePath: '${{ parameters.name }}'
-        targetPath: '${{ parameters.name }}'
-        commitMessage: 'Lets go!'
+        targetPath: ${{ steps['camel-dash'].output.updatedString }}
+        commitMessage: ${{ parameters.name }} application folder generated using Backstage and JHipster
+        ownerUser: 'Aditya Singhal'
+        ownerEmail: 'aditya.singhal@test.com'
 
     # - id: debug-wait
     #   name: Debug Wait
@@ -473,8 +492,8 @@ spec:
     #   input:
     #     seconds: 25
 
-    # This step publishes the contents of the working directory to GitHub.
-    - id: publish
+    # This step publishes the contents of the working directory to Azure.
+    - id: publish-multirepo
       name: Publish Repository
       if: ${{ parameters.monorepo === false }}
       action: publish:azure
@@ -495,18 +514,18 @@ spec:
         method: 'POST'
         useProxy: false
         baseUrl: https://dev.azure.com
-        path: '/${{ (parameters.repoUrl | parseRepoUrl).organization }}/${{ (parameters.repoUrl | parseRepoUrl).project }}/_apis/pipelines?api-version=7.0'
+        path: /${{ steps['repo-details'].output.orgName }}/${{ steps['repo-details'].output.projectName }}/_apis/pipelines?api-version=7.0
         headers:
           content-type: 'application/json'
           authorization: 'Basic ${{ parameters.base64EncodedToken }}'
         body:
-          folder: ''
-          name: ${{ parameters.name }}
+          folder: '/backstage-jhipster'
+          name: ${{ steps['camel-dash'].output.updatedString }}
           configuration:
             type: 'yaml'
-            path: 'azure-pipelines.yml'
+            path: ${{ steps['camel-dash'].output.updatedString }}/azure-pipelines.yml
             repository:
-              id: ${{ steps['publish-monorepo'].output.repositoryId }}
+              id: ${{ steps['repo-details'].output.repositoryId }}
               type: 'azureReposGit'
     
     - id: create-ci-pipeline-multirepo
@@ -545,8 +564,8 @@ spec:
       if: ${{ parameters.monorepo === true }}
       action: catalog:register
       input:
-        repoContentsUrl: ${{ parameters.gitRepoUrl }}?version=GB${{ steps['publish-monorepo'].output.sourceBranchName }}
-        catalogInfoPath: '/${{ parameters.name }}/catalog-info.yaml'
+        repoContentsUrl: ${{ parameters.gitRepoUrl }}?version=GB${{ steps['publish-monorepo'].output.branchName }}
+        catalogInfoPath: /${{ steps['camel-dash'].output.updatedString }}/catalog-info.yaml
     - id: register-multirepo
       name: Register Multirepo
       if: ${{ parameters.monorepo === false }}
@@ -560,9 +579,9 @@ spec:
     # getResponse: '{{ steps.jhipster_request.output.body }}'
     links:
       - title: Repository
-        url: ${{ steps['publish'].output.remoteUrl }}
-      - title: Pull-Request
-        url: ${{ steps['publish-monorepo'].output.pullRequestUrl }}
+        url: ${{ steps['publish-monorepo'].output.repositoryUrl }}
+      - title: Repository
+        url: ${{ steps['publish-multirepo'].output.remoteUrl }}
       - title: Open in catalog
         icon: catalog
         entityRef: ${{ steps['register-monorepo'].output.entityRef }}
