@@ -1,0 +1,39 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage
+  description: An example of a Backstage application.
+  annotations:
+    backstage.io/kubernetes-id: backstage
+  # Example for optional annotations
+  # annotations:
+  #   github.com/project-slug: backstage/backstage
+  #   backstage.io/techdocs-ref: dir:.
+spec:
+  type: service
+  owner: john@example.com
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: jhipster-online
+  description: An example of a jhipster-online application.
+  annotations:
+    backstage.io/kubernetes-id: jhipster
+spec:
+  type: service
+  owner: john@example.com
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mysql
+  description: An example of a mysql application.
+  annotations:
+    backstage.io/kubernetes-id: mysql
+spec:
+  type: service
+  owner: john@example.com
+  lifecycle: experimental

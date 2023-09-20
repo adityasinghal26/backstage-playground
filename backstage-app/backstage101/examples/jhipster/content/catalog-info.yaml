@@ -4,6 +4,9 @@ metadata:
   name: ${{ values.name | dump }}
   annotations: 
     backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: ${{ values.name | dump }}
+    dev.azure.com/project: ${{ values.project | dump }}
+    dev.azure.com/build-definition: ${{ values.repo | dump }}
 spec:
   type: service
   owner: user:guest
