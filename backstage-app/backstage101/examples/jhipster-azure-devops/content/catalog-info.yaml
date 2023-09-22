@@ -7,7 +7,7 @@ metadata:
     backstage.io/kubernetes-id: ${{ values.dashName }}
     dev.azure.com/project: ${{ values.project }}
     dev.azure.com/build-definition: ${{ values.dashName  }}
-    argocd/app-name: ${{ values.dashName }}
+    argocd/app-selector: 'app.kubernetes.io/app=${{ values.dashName }}'
 spec:
   type: service
   owner: user:guest
