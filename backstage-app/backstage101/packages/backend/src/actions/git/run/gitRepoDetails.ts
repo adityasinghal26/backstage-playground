@@ -101,10 +101,10 @@ export const getGitRepoDetailsAction = () => {
           ctx.logger.error(err);
         }
 
-        ctx.logger.info('Organization :' + `${gitOrgName}`);
-        ctx.logger.info('Project Name :' + `${gitProjectName}`);
-        ctx.logger.info('Repository Name :' + `${gitRepoName}`);
-        ctx.logger.info('Repository ID :' + `${gitRepoId}`);
+        ctx.logger.info('Organization : ' + `${gitOrgName}`);
+        ctx.logger.info('Project Name : ' + `${gitProjectName}`);
+        ctx.logger.info('Repository Name : ' + `${gitRepoName}`);
+        ctx.logger.info('Repository ID : ' + `${gitRepoId}`);
 
         ctx.output('repositoryId', gitRepoId);
         ctx.output('repositoryName',gitRepoName);
