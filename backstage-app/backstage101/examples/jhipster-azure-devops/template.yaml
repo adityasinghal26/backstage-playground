@@ -5,6 +5,10 @@ metadata:
   name: jhipster-azure-devops
   title: JHipster Azure DevOps
   description: Template that generates a JHipster application in Azure DevOps
+  tags:
+    - recommended
+    - jhipster
+    - azure-devops
 spec:
   owner: admin:aditya.singhal
   type: service

@@ -3,6 +3,7 @@ kind: Component
 metadata:
   name: ${{ values.name }}
   annotations:
+    backstage.io/techdocs-ref: dir:.
     backstage.io/kubernetes-id: ${{ values.dashName }}
     dev.azure.com/project: ${{ values.project }}
     dev.azure.com/build-definition: ${{ values.dashName  }}

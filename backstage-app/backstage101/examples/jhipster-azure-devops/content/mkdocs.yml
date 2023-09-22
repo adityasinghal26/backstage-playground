@@ -1,0 +1,9 @@
+site_name: '${{ values.name }}'
+
+nav:
+  - Home: index.md
+  - overview:
+      - Readme: 'overview/Readme.md'
+
+plugins:
+  - techdocs-core
