@@ -511,7 +511,7 @@ spec:
         targetPath: ${{ steps['camel-dash'].output.updatedString }}
         commitMessage: ${{ parameters.name }} application folder generated using Backstage and JHipster
         ownerUser: 'Aditya Singhal'
-        ownerEmail: 'aditya.singhal3@wipro.com'
+        ownerEmail: 'aditya.singha@test.com'
 
     - id: fetch-helm
       name: Fetch Helm
@@ -534,14 +534,14 @@ spec:
       name: Publish Helm
       action: git:commit:push
       input:
-        gitRepoUrl: https://dev.azure.com/WIPROTOPS/TOPS-PRODUCT/_git/kubernetes-manifests
+        gitRepoUrl: https://dev.azure.com/org1/prod1/_git/kubernetes-manifests
         authToken: ${{ parameters.personalAccessToken }}
         branch: easyjet-tech-upgrade-delta
         sourcePath: 'helm'
         targetPath: tops-easyjet/apps/functional/${{ steps['camel-dash'].output.updatedString }}
         commitMessage: ${{ parameters.name }} helm chart generated using Backstage and JHipster
         ownerUser: 'Aditya Singhal'
-        ownerEmail: 'aditya.singhal3@wipro.com'
+        ownerEmail: 'aditya.singha@test.com'
 
     # - id: debug-wait
     #   name: Debug Wait
