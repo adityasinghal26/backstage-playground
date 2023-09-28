@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Grid } from '@material-ui/core';
-import { EntityArgoCDContent, EntityArgoCDHistoryCard, EntityArgoCDOverviewCard, isArgocdAvailable } from '@roadiehq/backstage-plugin-argo-cd';
+import { EntityArgoCDContent, EntityArgoCDOverviewCard, isArgocdAvailable } from '@roadiehq/backstage-plugin-argo-cd';
 import {
   EntityApiDefinitionCard,
   EntityConsumedApisCard,
@@ -76,7 +76,15 @@ const techdocsContent = (
   </EntityTechdocsContent>
 );
 
-
+const ArgoCdContent = (
+  <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
+        <Grid item sm={12}>
+          <EntityArgoCDContent />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+);
 
 const cicdContent = (
   // This is an example of how you can implement your company's logic in entity page.
@@ -149,14 +157,8 @@ const overviewContent = (
     </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
-        <Grid item sm={4}>
-          <EntityArgoCDOverviewCard />
-        </Grid>
-        <Grid item sm={4}>
-          <EntityArgoCDHistoryCard />
-        </Grid>
-        <Grid item sm={4}>
-          <EntityArgoCDContent />
+        <Grid item sm={12}>
+        <EntityArgoCDOverviewCard />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
@@ -176,8 +178,12 @@ const serviceEntityPage = (
       {overviewContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/ci-cd" title="CI/CD">
+    <EntityLayout.Route path="/ci-cd" title="AZURE-CI">
       {cicdContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/argoCd" title="ARGO-CD">
+      {ArgoCdContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/kubernetes" title="Kubernetes">
@@ -231,6 +237,10 @@ const websiteEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/argoCd" title="ArgoCd">
+      {ArgoCdContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">

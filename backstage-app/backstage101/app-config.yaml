@@ -59,6 +59,10 @@ azureDevOps:
       # credentials:
       #   - personalAccessToken: ${PERSONAL_ACCESS_TOKEN}
 
+# optional: this will link to your argoCD web UI for each argoCD application
+argocd:
+  baseUrl: https://my-argocd.mycompany.com
+  
 proxy:
   '/argocd/api':
     target: https://my-argocd.mycompany.com/api/v1/

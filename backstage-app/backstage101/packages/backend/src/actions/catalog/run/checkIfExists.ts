@@ -81,6 +81,7 @@ export const checkEntityIfExistsAction = (options: {
             throw new Error(`Entity ${entityRef} already exists. Duplicate not allowed. Please give another application name.`);
           }
         }
+        ctx.logger.info('Application does not exist. Proceeding with further steps .');
         ctx.output('entityExists', exists);
       },
     });
