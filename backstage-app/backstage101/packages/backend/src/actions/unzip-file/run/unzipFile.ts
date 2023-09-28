@@ -50,7 +50,7 @@ export const createUnzipFileAction = () => {
                 extractPath: {
                 type: 'string',
                 title: 'Extract Path',
-                description: 'The filepath to extract the zip file that will be created',
+                description: 'The relative filepath to extract the zip file that will be created',
               }
             },
           },
@@ -59,14 +59,15 @@ export const createUnzipFileAction = () => {
       async handler(ctx) {
 
         const fullInputPath = `${ctx.workspacePath}/${ctx.input.fileName}`;
-        let fullExtractPath = `${ctx.workspacePath}`;
-
+        const tempExtractPath = `${ctx.input.extractPath}` ? `${ctx.workspacePath}/${ctx.input.extractPath}` : `${ctx.workspacePath}`
+        let fullExtractPath = `${tempExtractPath}`;
+        
         ctx.logger.info('Full input path ' + `${fullInputPath}`);
         
         if(ctx.input.monorepo){
           ctx.logger.info('Application is being generated as Mono-Repo.')
           const filenameWithoutExtension = path.parse(ctx.input.fileName).name;
-          fullExtractPath = `${ctx.workspacePath}/${filenameWithoutExtension}`;
+          fullExtractPath = `${tempExtractPath}/${filenameWithoutExtension}`;
 
           fs.mkdir(fullExtractPath, (error) => {
             if (error) {

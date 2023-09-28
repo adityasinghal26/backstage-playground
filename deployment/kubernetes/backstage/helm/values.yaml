@@ -22,10 +22,10 @@ container:
 secrets:
   backstage: 'backstage-secrets'
   postgres: 'postgres-secrets'
-  ghToken: 'dummy'
-  azToken: 'dummy'
+  ghToken: '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'
+  azToken: '6ylwnpjiaqbdycq775hvzpap74vpjeslk7n4qw737lgucrcnkflq'
   argocdToken: 'argocd.token=token-value'
-  backendUrl: 'https://adityasinghal26-devcontainer-name-8000.preview.app.github.dev'
+  backendUrl: 'https://animated-telegram-wr7jqj7rpj6g35495.github.dev'
   incluster:
     token: 'incluster-sa-b64-encoded-token'
   cluster1:
