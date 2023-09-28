@@ -37,13 +37,27 @@ export default async function createPlugin(
       //   https://backstage.io/docs/auth/identity-resolver
       github: providers.github.create({
         signIn: {
-          resolver(_, ctx) {
-            const userRef = 'user:default/guest'; // Must be a full entity reference
-            return ctx.issueToken({
-              claims: {
-                sub: userRef, // The user's own identity
-                ent: [userRef], // A list of identities that the user claims ownership through
-              },
+          resolver: async (info, ctx) => {
+            const { profile } = info;
+            const { email } = profile;
+            if (!email) {
+              throw new Error('User profile contained no email');
+            }
+
+            // Split the email into the local part and the domain.
+            const [name, domain] = email.split('@');
+
+            // Next we verify the email domain. It is recommended to include this
+            // kind of check if you don't look up the user in an external service.
+            if (domain !== 'domain.com') {
+              throw new Error(
+                `Login failed, this email ${email} does not belong to the expected domain`,
+              );
+            }
+
+            // By using `stringifyEntityRef` we ensure that the reference is formatted correctly
+            return ctx.signInWithCatalogUser({
+              entityRef: { name },
             });
           },
           // resolver: providers.github.resolvers.usernameMatchingUserEntityName(),

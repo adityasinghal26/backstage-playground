@@ -115,7 +115,13 @@ kubernetes:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers: {}
+  environment: production
+  providers:
+    github:
+      production:
+        clientId: github-oauth-client-id
+        clientSecret: github-oauth-client-secret
+
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
@@ -153,8 +159,8 @@ catalog:
         - allow: [Template]
 
     # Local example organizational data
-    - type: file
-      target: ../../examples/org.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
       rules:
         - allow: [User, Group]
     
