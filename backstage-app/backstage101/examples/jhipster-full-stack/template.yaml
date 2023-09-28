@@ -286,7 +286,7 @@ spec:
         authToken: ${{ parameters.personalAccessToken }}
 
     - id: jhipster-backend
-      name: JHipster Generation
+      name: JHipster Backend
       action: custom:http:request
       input:
         name: 'backend'
@@ -332,7 +332,7 @@ spec:
         getHeaders: '{{ steps.jhipster_request.output.headers }}'
 
     - id: jhipster-mobile
-      name: JHipster Generation
+      name: JHipster Mobile
       action: custom:http:request
       input:
         name: 'mobile'
@@ -378,7 +378,7 @@ spec:
         getHeaders: '{{ steps.jhipster_request.output.headers }}'
 
     - id: jhipster-web
-      name: JHipster Generation
+      name: JHipster Web
       action: custom:http:request
       input:
         name: 'web'
@@ -430,7 +430,7 @@ spec:
     #    message: 'Output of jhipster_request getResponse ${{ steps.jhipster_request.output.body }} getCode ${{ steps.jhipster_request.output.code }} getHeader ${{ steps.jhipster_request.output.headers }}'
 
     - id: unzip-file
-      name: Unzip File
+      name: Unzip Backend File
       action: unzip:file:create
       input:
         monorepo: true
@@ -439,13 +439,13 @@ spec:
         extractPath: ${{ parameters.name }}
     
     - id: delete-zip
-      name: Delete Zip
+      name: Delete Backend Zip
       action: fs:delete
       input:
         files: ['backend.zip']
 
     - id: unzip-file
-      name: Unzip File
+      name: Unzip Mobile File
       action: unzip:file:create
       input:
         monorepo: true
@@ -454,13 +454,13 @@ spec:
         extractPath: ${{ parameters.name }}
     
     - id: delete-zip
-      name: Delete Zip
+      name: Delete Mobile Zip
       action: fs:delete
       input:
         files: ['mobile.zip']
 
     - id: unzip-file
-      name: Unzip File
+      name: Unzip Web File
       action: unzip:file:create
       input:
         monorepo: true
@@ -469,7 +469,7 @@ spec:
         extractPath: ${{ parameters.name }}
     
     - id: delete-zip
-      name: Delete Zip
+      name: Delete Web Zip
       action: fs:delete
       input:
         files: ['web.zip']
