@@ -158,6 +158,12 @@ catalog:
       rules:
         - allow: [Template]
 
+    # Local example template
+    - type: file
+      target: ../../examples/jhipster-full-stack/template.yaml
+      rules:
+        - allow: [Template]
+
     # Local example organizational data
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml

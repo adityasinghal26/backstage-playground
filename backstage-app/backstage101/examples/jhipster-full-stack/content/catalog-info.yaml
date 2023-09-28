@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: ${{ values.dashName }}
+    dev.azure.com/project: ${{ values.project }}
+    dev.azure.com/build-definition: ${{ values.dashName  }}
+    argocd/app-selector: 'app.kubernetes.io/app=${{ values.dashName }}'
+spec:
+  type: service
+  owner: user:guest
+  lifecycle: experimental

@@ -1,0 +1,6 @@
+# Image details in Deployment
+image:
+  tag: 'tag'
+  pullsecret: 'myregistrykey'
+  registry: 'myregistry'
+  repository: '${{ values.dashName }}'

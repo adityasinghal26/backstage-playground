@@ -1,0 +1,597 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: jhipster-full-stack
+  title: JHipster Full Stack
+  description: Template that generates a JHipster Full Stack application 
+  # tags:
+  #   - recommended
+  #   - jhipster
+  #   - azure-devops
+spec:
+  owner: admin:aditya.singhal
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Application Name
+      type: object
+      required:
+      - applicationGroup
+      - name
+      - personalAccessToken
+      - base64EncodedToken
+      properties:
+        applicationGroup:
+          type: string
+          title: The group name to which application belongs to.
+          ui:widget: select
+          enum:
+          - app1
+          - app2
+          enumNames:
+          - 'app1'
+          - 'app2'
+        name:
+          type: string
+          title: Unique name of the application service
+          default: jhipsterSampleApplication
+          ui:autofocus: 'true'
+          ui:options:
+            rows: 5
+        personalAccessToken:
+          type: string
+          title: Personal Access Token
+          ui:widget: password
+          ui:options:
+            rows: 1
+        base64EncodedToken:
+          type: string
+          title: Base64 Encoded Personal Access Token
+          ui:widget: password
+          ui:description: Run command `mypat=:pat && echo -n $mypat | base64` in linux terminal to generate base64 encoded token. Replace pat with actual token value.
+          ui:options:
+            rows: 1
+        # gitRepoUrl:
+        #   type: string
+        #   title: Git Repository URL for application generation
+        #  readOnly: false
+      dependencies:
+        applicationGroup:
+          oneOf:
+          - properties:
+              applicationGroup:
+                enum:
+                - app1
+              gitRepoUrl:
+                type: string
+                title: Git Repository
+                enum: 
+                - https://dev.azure.com/org1/proj1/_git/backstage-test-app-1
+            required:
+            - gitRepoUrl
+          - properties:
+              applicationGroup:
+                enum:
+                - app2
+              gitRepoUrl:
+                type: string
+                title: Git Repository
+                enum: 
+                - https://dev.azure.com/org1/proj1/_git/backstage-test-app-2
+            required:
+            - gitRepoUrl
+    # - title: Application Type
+    #   type: object
+    #   required:
+    #   - applicationType
+    #   properties:
+    #     applicationType:
+    #       type: string
+    #       title: Which type of application would you like to create?
+    #       default: Monolithic Application (recommended for simple projects)
+    #       ui:widget: select
+    #       enum:
+    #       - microservice
+    #       - gateway
+    #       enumNames:
+    #       - Microservice Application
+    #       - Microservice Gateway
+    - title: Stack Options
+      type: object
+      properties:
+        stackOptions:
+          type: array
+          title: Besides Backend, which stack options would you like to use?
+          items:
+            type: string
+            enum:
+            - web
+            - mobile
+          uniqueItems: true
+          ui:widget: checkboxes
+    - title: Server Side Options
+      type: object
+      required:
+      - packageName
+      - serverPort
+      - serviceDiscoveryType
+      properties:
+        packageName:
+          type: string
+          title: What is your default package name?
+          default: com.mycompany.myapp
+          ui:options:
+            rows: 1
+        packageFolder:
+          type: string
+          title: What is your default package folder?
+          default: com/mycompany/myapp
+          ui:options:
+            rows: 1
+        serverPort:
+          type: number
+          title: On which port would like your server to run? It should be unique to avoid port conflicts
+          default: 8080
+          readOnly: true
+        serviceDiscoveryType:
+          type: boolean
+          title: Do you want to use the JHipster Registry to configure, monitor and scale your application?
+          ui:widget: select
+          default: false
+          readOnly: true
+        authenticationType:
+          type: string
+          title: Which type of authentication would you like to use?
+          ui:widget: select
+          default: jwt
+          enum:
+          - jwt
+          enumNames:
+          - JWT authentication (stateless, with a token)
+        databaseType:
+          type: string
+          title: Which type of database would you like to use?
+          ui:widget: select
+          default: sql
+          enum:
+          - sql
+          enumNames:
+          - SQL (H2, MySQL, MariaDB, PostgreSQL, Oracle, MSSQL) 
+        prodDatabaseType:
+          type: string
+          title: Which production database would you like to use?
+          ui:widget: select
+          default: postgresql
+          enum:
+          - postgresql
+          - mongodb
+          enumNames:
+          - PostgreSQL
+          - MongoDB
+        devDatabaseType:
+          type: string
+          title: Which development database would you like to use?
+          ui:widget: select
+          default: postgresql
+          enum:
+          - h2Memory
+          - postgresql
+          - mongodb
+          enumNames:
+          - H2 with in-memory persistence
+          - PostgreSQL
+          - MongoDB
+        cacheProvider:
+          type: string
+          title: Which type of database would you like to use?
+          ui:widget: select
+          default: redis
+          enum:
+          - redis
+          enumNames:
+          - Yes, with Redis (single server)
+        enableHibernateCache:
+          type: boolean
+          title: Do you want to use Hibernate 2nd level cache?
+          ui:widget: select
+          default: false
+          readOnly: true
+        buildTool:
+          type: string
+          title: Would you like to use Maven or Gradle for building the backend?
+          ui:widget: select
+          default: gradle
+          enum:
+          - gradle
+          enumNames:
+          - 'Gradle'
+    - title: Client Side Options
+      type: object
+      required:
+      - clientFramework
+      properties:
+        clientFramework:
+          type: string
+          title: Which Framework would you like to use for the client?
+          default: angularX
+          ui:widget: select
+          enum:
+          - angularX
+          enumNames:
+          - Angular
+    - title: Internationalization Options
+      type: object
+      properties:
+        enableTranslation:
+          type:  boolean
+          title: Would you like to enable internationalization support?
+          ui:widget: select
+          default: true
+          enum:
+          - true
+          - false
+          enumNames:
+          - 'Yes'
+          - 'No'
+      required:
+      - enableTranslation
+      dependencies:
+        enableTranslation:
+          oneOf:
+          - properties:
+              enableTranslation:
+                enum:
+                - true
+              nativeLanguage:
+                type: string
+                title: Please choose the native language of the application
+                default: en
+                enum:
+                - en
+                - fr
+                enumNames:
+                - English
+                - French
+            required:
+            - nativeLanguage
+          - properties:
+              enableTranslation:
+                enum:
+                - false
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: entity-check
+      name: Check application exists
+      action: catalog:entity:exists
+      input:
+        entityRef: component:default/${{ parameters.name }}
+    
+    - id: camel-dash
+      name: Process application
+      action: strings:camel:dash
+      input:
+        stringToModify: ${{ parameters.name }}
+
+    - id: repo-details
+      name: Fetch Repo Details
+      action: git:details:get
+      input:
+        gitRepoUrl: ${{ parameters.gitRepoUrl }}
+        authToken: ${{ parameters.personalAccessToken }}
+
+    - id: jhipster-backend
+      name: JHipster Backend
+      action: custom:http:request
+      input:
+        name: 'backend'
+        method: 'POST'
+        useProxy: true
+        path: '/proxy/jhipster/api/download-application'
+        headers:
+          content-type: 'application/json'
+        body:
+          generator-jhipster:
+            applicationType: 'microservice'
+            gitCompany: ''
+            baseName: ${{ parameters.name }}
+            packageName: ${{ parameters.packageName }}
+            packageFolder: ${{ parameters.packageFolder }}
+            serverPort: ${{ parameters.serverPort }}
+            serviceDiscoveryType: ${{ parameters.serviceDiscoveryType }}
+            authenticationType: ${{ parameters.authenticationType }}
+            cacheProvider: ${{ parameters.cacheProvider }}
+            enableHibernateCache: ${{ parameters.enableHibernateCache }}
+            websocket: false
+            databaseType: ${{ parameters.databaseType }}
+            devDatabaseType: ${{ parameters.devDatabaseType }}
+            prodDatabaseType: ${{ parameters.prodDatabaseType }}
+            searchEngine: false
+            enableSwaggerCodegen: false
+            messageBroker: false
+            buildTool: ${{ parameters.buildTool }}
+            useSass: true
+            clientPackageManager: npm
+            testFrameworks: []
+            enableTranslation: ${{ parameters.enableTranslation }}
+            nativeLanguage: ${{ parameters.nativeLanguage }}
+            languages:
+            - en
+            clientFramework: ${{ parameters.clientFramework }}
+            jhiPrefix: jhi
+            withAdminUi: false
+            blueprints: []
+      output:
+        getResponse: '${{ steps.jhipster_request.output.body }}'
+        getCode: '{{ steps.jhipster_request.output.code }}'
+        getHeaders: '{{ steps.jhipster_request.output.headers }}'
+
+    - id: jhipster-mobile
+      name: JHipster Mobile
+      action: custom:http:request
+      input:
+        name: 'mobile'
+        method: 'POST'
+        useProxy: true
+        path: '/proxy/jhipster/api/download-application'
+        headers:
+          content-type: 'application/json'
+        body:
+          generator-jhipster:
+            applicationType: 'gateway'
+            gitCompany: ''
+            baseName: ${{ parameters.name }}
+            packageName: ${{ parameters.packageName }}
+            packageFolder: ${{ parameters.packageFolder }}
+            serverPort: ${{ parameters.serverPort }}
+            serviceDiscoveryType: ${{ parameters.serviceDiscoveryType }}
+            authenticationType: ${{ parameters.authenticationType }}
+            cacheProvider: ${{ parameters.cacheProvider }}
+            enableHibernateCache: ${{ parameters.enableHibernateCache }}
+            websocket: false
+            databaseType: ${{ parameters.databaseType }}
+            devDatabaseType: ${{ parameters.devDatabaseType }}
+            prodDatabaseType: ${{ parameters.prodDatabaseType }}
+            searchEngine: false
+            enableSwaggerCodegen: false
+            messageBroker: false
+            buildTool: ${{ parameters.buildTool }}
+            useSass: true
+            clientPackageManager: npm
+            testFrameworks: []
+            enableTranslation: ${{ parameters.enableTranslation }}
+            nativeLanguage: ${{ parameters.nativeLanguage }}
+            languages:
+            - en
+            clientFramework: ${{ parameters.clientFramework }}
+            jhiPrefix: jhi
+            withAdminUi: false
+            blueprints: []
+      output:
+        getResponse: '${{ steps.jhipster_request.output.body }}'
+        getCode: '{{ steps.jhipster_request.output.code }}'
+        getHeaders: '{{ steps.jhipster_request.output.headers }}'
+
+    - id: jhipster-web
+      name: JHipster Web
+      action: custom:http:request
+      input:
+        name: 'web'
+        method: 'POST'
+        useProxy: true
+        path: '/proxy/jhipster/api/download-application'
+        headers:
+          content-type: 'application/json'
+        body:
+          generator-jhipster:
+            applicationType: 'gateway'
+            gitCompany: ''
+            baseName: ${{ parameters.name }}
+            packageName: ${{ parameters.packageName }}
+            packageFolder: ${{ parameters.packageFolder }}
+            serverPort: ${{ parameters.serverPort }}
+            serviceDiscoveryType: ${{ parameters.serviceDiscoveryType }}
+            authenticationType: ${{ parameters.authenticationType }}
+            cacheProvider: ${{ parameters.cacheProvider }}
+            enableHibernateCache: ${{ parameters.enableHibernateCache }}
+            websocket: false
+            databaseType: ${{ parameters.databaseType }}
+            devDatabaseType: ${{ parameters.devDatabaseType }}
+            prodDatabaseType: ${{ parameters.prodDatabaseType }}
+            searchEngine: false
+            enableSwaggerCodegen: false
+            messageBroker: false
+            buildTool: ${{ parameters.buildTool }}
+            useSass: true
+            clientPackageManager: npm
+            testFrameworks: []
+            enableTranslation: ${{ parameters.enableTranslation }}
+            nativeLanguage: ${{ parameters.nativeLanguage }}
+            languages:
+            - en
+            clientFramework: ${{ parameters.clientFramework }}
+            jhiPrefix: jhi
+            withAdminUi: false
+            blueprints: []
+      output:
+        getResponse: '${{ steps.jhipster_request.output.body }}'
+        getCode: '{{ steps.jhipster_request.output.code }}'
+        getHeaders: '{{ steps.jhipster_request.output.headers }}'
+
+    #- id: debug-log
+    #  name: Debug Log
+    #  action: debug:log
+    #  input:
+    #    message: 'Output of jhipster_request getResponse ${{ steps.jhipster_request.output.body }} getCode ${{ steps.jhipster_request.output.code }} getHeader ${{ steps.jhipster_request.output.headers }}'
+
+    - id: unzip-file
+      name: Unzip Backend File
+      action: unzip:file:create
+      input:
+        monorepo: true
+        absoluteFilePath: '/tmp'
+        fileName: 'backend.zip'
+        extractPath: ${{ parameters.name }}
+    
+    - id: delete-zip
+      name: Delete Backend Zip
+      action: fs:delete
+      input:
+        files: ['backend.zip']
+
+    - id: unzip-file
+      name: Unzip Mobile File
+      action: unzip:file:create
+      input:
+        monorepo: true
+        absoluteFilePath: '/tmp'
+        fileName: 'mobile.zip'
+        extractPath: ${{ parameters.name }}
+    
+    - id: delete-zip
+      name: Delete Mobile Zip
+      action: fs:delete
+      input:
+        files: ['mobile.zip']
+
+    - id: unzip-file
+      name: Unzip Web File
+      action: unzip:file:create
+      input:
+        monorepo: true
+        absoluteFilePath: '/tmp'
+        fileName: 'web.zip'
+        extractPath: ${{ parameters.name }}
+    
+    - id: delete-zip
+      name: Delete Web Zip
+      action: fs:delete
+      input:
+        files: ['web.zip']
+
+    #- id: save-body
+    #  name: Save HTTP Response Body
+    #  action: binary:file:create
+    #  input:
+    #    contents: '${{ steps.jhipster_request.output.body }}'
+    #    filename: 'response_body.zip'
+
+    - id: fetch-catalog
+      name: Fetch Catalog
+      action: fetch:template
+      input:
+        url: './content'
+        targetPath: ${{ parameters.name }}
+        values:
+          name: ${{ parameters.name }}
+          dashName: ${{ steps['camel-dash'].output.updatedString }}
+          project: ${{ steps['repo-details'].output.projectName }}
+          repo: ${{ steps['repo-details'].output.repositoryName }}
+
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
+
+    # This step publishes the contents of the working directory to Azure.
+    - id: publish
+      name: Publish Application
+      action: git:commit:push
+      input:
+        gitRepoUrl: ${{ parameters.gitRepoUrl }}
+        authToken: ${{ parameters.personalAccessToken }}
+        branch: master
+        sourcePath: ${{ parameters.name }}
+        targetPath: ${{ steps['camel-dash'].output.updatedString }}
+        commitMessage: ${{ parameters.name }} application folder generated using Backstage and JHipster
+        ownerUser: 'Aditya Singhal'
+        ownerEmail: 'aditya.singha@test.com'
+
+    - id: fetch-helm
+      name: Fetch Helm
+      action: fetch:template
+      input:
+        url: './helm'
+        targetPath: 'helm'
+        values:
+          name: ${{ parameters.name }}
+          dashName: ${{ steps['camel-dash'].output.updatedString }}
+
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
+
+    # This step publishes the contents of the working directory to Azure.
+    - id: publish-helm
+      name: Publish Helm
+      action: git:commit:push
+      input:
+        gitRepoUrl: https://dev.azure.com/org1/prod1/_git/kubernetes-manifests
+        authToken: ${{ parameters.personalAccessToken }}
+        branch: easyjet-tech-upgrade-delta
+        sourcePath: 'helm'
+        targetPath: tops-easyjet/apps/functional/${{ steps['camel-dash'].output.updatedString }}
+        commitMessage: ${{ parameters.name }} helm chart generated using Backstage and JHipster
+        ownerUser: 'Aditya Singhal'
+        ownerEmail: 'aditya.singha@test.com'
+
+    # - id: debug-wait
+    #   name: Debug Wait
+    #   action: debug:wait
+    #   input:
+    #     seconds: 25
+
+    - id: create-ci-pipeline
+      name: Create Azure CI
+      action: custom:http:request
+      input:
+        name: ${{ parameters.name }}
+        method: 'POST'
+        useProxy: false
+        baseUrl: https://dev.azure.com
+        path: /${{ steps['repo-details'].output.orgName }}/${{ steps['repo-details'].output.projectName }}/_apis/pipelines?api-version=7.0
+        headers:
+          content-type: 'application/json'
+          authorization: 'Basic ${{ parameters.base64EncodedToken }}'
+        body:
+          folder: '/backstage-jhipster'
+          name: ${{ steps['camel-dash'].output.updatedString }}
+          configuration:
+            type: 'yaml'
+            path: ${{ steps['camel-dash'].output.updatedString }}/azure-pipelines.yml
+            repository:
+              id: ${{ steps['repo-details'].output.repositoryId }}
+              type: 'azureReposGit'
+
+    # - id: debug-log
+    #   name: Debug Log
+    #   action: debug:log
+    #   input:
+    #     listWorkspace: true
+    #     message: Input body sent ${{ steps['create-ci-pipeline-monorepo'].input.body }} Output configured ${{ steps['create-ci-pipeline-monorepo'].output.code }} and headers ${{ steps['create-ci-pipeline-monorepo'].output.headers }} and body ${{ steps['create-ci-pipeline-monorepo'].output.body }}
+
+    # The final step is to register our new component in the catalog.
+    - id: register
+      name: Register Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ parameters.gitRepoUrl }}?version=GB${{ steps['publish'].output.branchName }}
+        catalogInfoPath: /${{ steps['camel-dash'].output.updatedString }}/catalog-info.yaml
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    # getResponse: '{{ steps.jhipster_request.output.body }}'
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.repositoryUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
