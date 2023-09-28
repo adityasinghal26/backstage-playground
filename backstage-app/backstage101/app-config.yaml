@@ -148,8 +148,8 @@ catalog:
         - allow: [Template]
 
     # Local example organizational data
-    - type: file
-      target: ../../examples/org.yaml
+    - type: url
+      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
       rules:
         - allow: [User, Group]
     
