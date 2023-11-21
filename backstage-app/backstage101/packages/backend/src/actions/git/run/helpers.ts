@@ -80,7 +80,7 @@ export const createPullRequest = async(
     try {
 
       if(isAzure){
-        const [domain, orgName, projectName, rest, repoName] = gitRepoUrl.split('/');
+        const [domain, orgName, projectName, _rest, repoName] = gitRepoUrl.split('/');
   
         const orgUrl = `'https://${domain}/${orgName}'`;
         const token = personalAccessToken;

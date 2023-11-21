@@ -85,10 +85,11 @@ export const http = async (
   const saveOctetStreamBuffer = async ( bodyBuffer : ArrayBuffer ) => {
     const buffer = Buffer.from(bodyBuffer);
     const fileType = await FileType.fromBuffer(buffer);
+    const fileTypeExtension = fileType?.ext!;
     try {
-        if (fileType.ext) {
+        if (typeof fileTypeExtension === "string") {
             logger.info('Context workspace path is ' + `${ctx.workspacePath}` + ' and file name input is ' + `${ctx.input.name}`);
-            const outputFileName = `${ctx.workspacePath}/${ctx.input.name}.${fileType.ext}`
+            const outputFileName = `${ctx.workspacePath}/${ctx.input.name}.${fileTypeExtension}`
             fs.createWriteStream(outputFileName).write(buffer);
             logger.info('Successfully saved zip file ' + `${outputFileName}`)
         } else {

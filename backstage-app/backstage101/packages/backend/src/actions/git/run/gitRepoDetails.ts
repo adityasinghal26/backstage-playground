@@ -80,7 +80,7 @@ export const getGitRepoDetailsAction = () => {
         try {
 
           if(isAzure){
-            const [domain, orgName, projectName, git_ref, repoName] = gitRepoWithoutHttps.split('/');
+            const [domain, orgName, projectName, _git_ref, repoName] = gitRepoWithoutHttps.split('/');
   
             const orgUrl = `https://${domain}/${orgName}`;
             const token = authToken;

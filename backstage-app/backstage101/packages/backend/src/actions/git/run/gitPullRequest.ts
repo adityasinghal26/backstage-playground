@@ -18,7 +18,7 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { RemoteWithoutRefs, simpleGit } from 'simple-git';
 // import path from 'path';
 // import { pipeline } from 'node:stream';
-import uuid from 'uuid';
+// import uuid from 'uuid';
 import * as azdev from 'azure-devops-node-api';
 import * as azgit from 'azure-devops-node-api/GitApi';
 import { GitPullRequest } from 'azure-devops-node-api/interfaces/GitInterfaces';
@@ -119,7 +119,7 @@ export const createGitPullRequestAction = () => {
         const { sourcePath, targetPath } = input;
 
         const gitRepoWithoutHttps = await removeHttpsFromUrl(gitRepoUrl);
-        const [domain, orgName, projectName, git_ref, repoName] = gitRepoWithoutHttps.split('/');
+        const [domain, orgName, projectName, _git_ref, repoName] = gitRepoWithoutHttps.split('/');
 
         const git = simpleGit();
         const user = `${orgName}`;
@@ -127,7 +127,7 @@ export const createGitPullRequestAction = () => {
         const fullSourcePath = `${ctx.workspacePath}/${sourcePath}`;
         const gitPath = `${ctx.workspacePath}/git`;
         const fullTargetPath = `${ctx.workspacePath}/git/${targetPath}`;
-        const sourceBranch = `backstage-${uuid.v4()}`;
+        const sourceBranch = `backstage`;
         const finalCommitMessage = commitMessage.length !== 0  ? commitMessage : 'first commit!';
 
         console.log('Git URL without HTTPS: ', gitRepoWithoutHttps);
