@@ -81,6 +81,16 @@ proxy:
     pathRewrite:
       '/api/proxy/jhipster/': '/'
   #   changeOrigin: true
+  '/sonarqube':
+    target: https://sonarqube.mycompany.com/api
+    pathRewrite:
+      '/api/proxy/sonarqube/': '/'
+    allowedMethods: ['GET']
+    auth: "${SONARQUBE_TOKEN}:"
+
+sonarqube:
+  baseUrl: https://sonarqube.mycompany.com
+  apiKey: ${SONARQUBE_TOKEN}
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs

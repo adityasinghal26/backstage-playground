@@ -3560,6 +3560,51 @@
     qs "^6.9.4"
     react-use "^17.2.4"
 
+"@backstage/plugin-sonarqube-backend@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-sonarqube-backend/-/plugin-sonarqube-backend-0.2.9.tgz#984845fb0fb5c402a1fb1048e4d8ed8d59abf03e"
+  integrity sha512-7G4a3AwTlv823erxEPd/3YdefsV5RZwFfLnqzOo1/eYI6Em7YyNVLE4odFfV6gPWeB46rdG/CgT9QHp6T4gl4w==
+  dependencies:
+    "@backstage/backend-common" "^0.19.9"
+    "@backstage/backend-plugin-api" "^0.6.7"
+    "@backstage/config" "^1.1.1"
+    "@backstage/errors" "^1.2.3"
+    "@types/express" "*"
+    express "^4.18.1"
+    express-promise-router "^4.1.0"
+    node-fetch "^2.6.7"
+    winston "^3.2.1"
+    yn "^5.0.0"
+
+"@backstage/plugin-sonarqube-react@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-sonarqube-react/-/plugin-sonarqube-react-0.1.10.tgz#cbb026c74698ead5ebe8bc61da531330b72b452f"
+  integrity sha512-Btd4AZF0+vPUtHqHvavbHUTPcQXSVPAo4VyT7oUVFuzfJzo7T+Oa0DASM1JKb7uKz4f7/PH2+kdcKvYR6N25/A==
+  dependencies:
+    "@backstage/catalog-model" "^1.4.3"
+    "@backstage/core-plugin-api" "^1.8.0"
+
+"@backstage/plugin-sonarqube@^0.7.9":
+  version "0.7.9"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-sonarqube/-/plugin-sonarqube-0.7.9.tgz#eb05b81c616ecc45baae512f9046629958ba0c3f"
+  integrity sha512-IECsTYLcPS/M8KvUMRDFedtHWtkxztVMu+PVYhlSg0Kjaj4+3+MR1DC+lFdGQR9JoK3AgjookDrgccYuCCRZSw==
+  dependencies:
+    "@backstage/catalog-model" "^1.4.3"
+    "@backstage/core-components" "^0.13.8"
+    "@backstage/core-plugin-api" "^1.8.0"
+    "@backstage/plugin-catalog-react" "^1.9.1"
+    "@backstage/plugin-sonarqube-react" "^0.1.10"
+    "@backstage/theme" "^0.4.4"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.61"
+    "@material-ui/styles" "^4.10.0"
+    "@types/react" "^16.13.1 || ^17.0.0"
+    cross-fetch "^4.0.0"
+    luxon "^3.0.0"
+    rc-progress "3.5.1"
+    react-use "^17.2.4"
+
 "@backstage/plugin-tech-radar@^0.6.10":
   version "0.6.10"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-tech-radar/-/plugin-tech-radar-0.6.10.tgz#28c7b702046c659410f0b7fd5fdbfa731333e7ae"
@@ -8762,7 +8807,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/react-dom@*", "@types/react-dom@<18.0.0", "@types/react-dom@^17":
+"@types/react-dom@*", "@types/react-dom@<18.0.0":
   version "17.0.24"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.24.tgz#23a1f2528d71d9a5b4ffa58788adde9b8f29d444"
   integrity sha512-9TXTs2CPADeEQ4N5cnWRCqmOZN8O/nl1Dn11dWtj2faZEu0wJnx0it4N8/uAVGH7w2CJ/+sPcv2zMCXkqfeR9A==
@@ -9649,6 +9694,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
     "@backstage/plugin-scaffolder" "^1.16.1"
     "@backstage/plugin-search" "^1.4.3"
     "@backstage/plugin-search-react" "^1.7.3"
+    "@backstage/plugin-sonarqube" "^0.7.9"
     "@backstage/plugin-tech-radar" "^0.6.10"
     "@backstage/plugin-techdocs" "^1.9.1"
     "@backstage/plugin-techdocs-module-addons-contrib" "^1.1.2"
@@ -13374,7 +13420,7 @@ express-session@^1.17.1:
     safe-buffer "5.2.1"
     uid-safe "~2.1.5"
 
-express@^4.17.1, express@^4.17.3, express@^4.18.2:
+express@^4.17.1, express@^4.17.3, express@^4.18.1, express@^4.18.2:
   version "4.18.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.18.2.tgz#3fabe08296e930c796c19e3c516979386ba9fd59"
   integrity sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==
@@ -24326,6 +24372,11 @@ yn@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/yn/-/yn-4.0.0.tgz#611480051ea43b510da1dfdbe177ed159f00a979"
   integrity sha512-huWiiCS4TxKc4SfgmTwW1K7JmXPPAmuXWYy4j9qjQo4+27Kni8mGhAAi1cloRWmBe2EqcLgt3IGqQoRL/MtPgg==
+
+yn@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/yn/-/yn-5.0.0.tgz#63fc2e2e0056cf294397eed6ad4a3fbdf707f26f"
+  integrity sha512-+l37+9TyGEsyxGLaTg6QgYy5KnOp74ZZl4dPFLQpBWSkO99uBC5jnS0pOGwXFViPbiaEtWbParH2KrgWWF2duQ==
 
 yocto-queue@^0.1.0:
   version "0.1.0"
