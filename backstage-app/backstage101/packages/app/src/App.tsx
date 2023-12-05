@@ -36,6 +36,7 @@ import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/
 
 import { githubAuthApiRef } from '@backstage/core-plugin-api';
 import { SignInPage } from '@backstage/core-components';
+import { GithubCodespacesPage } from '@internal/plugin-github-codespaces';
 
 const app = createApp({
   components: {
@@ -113,6 +114,7 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+    <Route path="/github-codespaces" element={<GithubCodespacesPage />} />
   </FlatRoutes>
 );
 
