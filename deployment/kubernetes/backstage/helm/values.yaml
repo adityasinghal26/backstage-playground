@@ -22,10 +22,11 @@ container:
 secrets:
   backstage: 'backstage-secrets'
   postgres: 'postgres-secrets'
-  ghToken: 'dummy'
-  azToken: 'dummy'
+  jiraTOKEN: 'Basic c2FueWFtc2hhcm1hOEBnbWFpbC5jb206QVRBVFQzeEZmR0YwZWhRWWdVSXBfeXBtbHpOd1lJcVdqUm9vVFRyLXM5Vkpnd3lZTkhDRjFCY0I4Q1dGZXdLNDViTU5jbGtmRldmZkJFSDZtaHI2WFVlbGVka3JrNEhZSDQxYi15bnlRU2lqQm81dF9pOVd2dnlsSllWRHJENmVuU2VoTkk5Tl94X3gySTZiLUdVNEFrXzRRQU5mc2FkRkFBVHdMSER3dFJUV0VCNl9kU0Jzam9NPTJBMTZFREY1'
+  ghToken: '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'
+  azToken: 'm7oegymfk73u7ihruo7cnvyjjeoiivhbp5434tl6ffohdnp2so2q'
   argocdToken: 'argocd.token=token-value'
-  backendUrl: 'https://adityasinghal26-devcontainer-name-8000.preview.app.github.dev'
+  backendUrl: 'https://sturdy-system-pjjgv9gxv975f74x9.github.dev'
   incluster:
     token: 'incluster-sa-b64-encoded-token'
   cluster1:

@@ -49,6 +49,7 @@
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
     "@roadiehq/backstage-plugin-argo-cd": "^2.3.3",
+    "@roadiehq/backstage-plugin-jira": "^2.4.12",
     "@zcmander/backstage-plugin-msforms": "^1.0.0",
     "history": "^5.0.0",
     "react": "^17.0.2",

@@ -44,6 +44,7 @@ const app = createApp({
         {...props}
         align='center'
         providers={[
+          'guest',
           {
             id: 'github-auth-provider',
             title: 'GitHub',

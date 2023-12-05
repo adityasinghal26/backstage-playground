@@ -1,6 +1,6 @@
 app:
   title: Scaffolded Backstage App
-  baseUrl: http://localhost:3000
+  baseUrl: https://sturdy-system-pjjgv9gxv975f74x9.github.dev
 
 organization:
   name: My Company
@@ -19,6 +19,7 @@ backend:
     # Uncomment the following host directive to bind to specific interfaces
     # host: 127.0.0.1
   csp:
+    img-src: ["'self'", 'https://hangar7.atlassian.net/']
     connect-src: ["'self'", 'http:', 'https:']
     frame-src: ["'self'", 'https://forms.office.com/']
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
@@ -64,6 +65,16 @@ argocd:
   baseUrl: https://my-argocd.mycompany.com
   
 proxy:
+  '/jira/api':
+    target: 'https://hangar7.atlassian.net/'
+    headers:
+      Authorization:
+        $env: JIRA_TOKEN
+      Accept: 'application/json'
+      Content-Type: 'application/json'
+      X-Atlassian-Token: 'nocheck'
+      User-Agent: "MY-UA-STRING"
+
   '/argocd/api':
     target: https://my-argocd.mycompany.com/api/v1/
     pathRewrite:
