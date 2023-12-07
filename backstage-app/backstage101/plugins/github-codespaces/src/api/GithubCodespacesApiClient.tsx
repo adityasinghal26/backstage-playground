@@ -51,7 +51,7 @@ export class GithubCodespacesApiClient implements GithubCodespacesApi {
         const githubIntegrationConfig = configs.find(v => v.host === hostname);
         const baseUrl = githubIntegrationConfig?.apiBaseUrl;
 
-        const token = await auth.getAccessToken(['repo','codespaces'])
+        const token = await auth.getAccessToken(['repo','codespace'])
         return new Octokit({ auth: token, baseUrl });
       }
 
@@ -61,7 +61,6 @@ export class GithubCodespacesApiClient implements GithubCodespacesApi {
                
         const octokit = await this.getOctokit('github.com')
         const response = await octokit.rest.codespaces.listForAuthenticatedUser()
-
         return response.data
     };
 
