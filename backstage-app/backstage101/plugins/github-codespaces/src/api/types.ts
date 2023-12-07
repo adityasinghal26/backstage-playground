@@ -20,3 +20,52 @@ export type Options = {
     githubAuthApi: OAuthApi;
     configApi: ConfigApi;
 }
+
+export type Repository = {
+    id: string;
+    name: string;
+    full_name: string;
+    html_url: string;
+}
+
+export type CodespaceProperties = {
+    id: number;
+    name: string;
+    display_name: string;
+    repository: Repository;
+    state: string;
+    url: string;
+    start_url: string;
+    stop_url: string;
+}
+
+export type Codespace = {
+    title: string;
+    description: string;
+    properties: CodespaceProperties;
+}
+
+export type CodespacesList = {
+    total_count: number;
+    codespaces: Codespace[];
+}
+
+export enum CodespaceState {
+    'Unknown',
+    'Created',
+    'Queued',
+    'Provisioning',
+    'Available',
+    'Awaiting',
+    'Unavailable',
+    'Deleted',
+    'Moved',
+    'Shutdown',
+    'Archived',
+    'Starting',
+    'ShuttingDown',
+    'Failed',
+    'Exporting',
+    'Updating',
+    'Rebuilding',
+}

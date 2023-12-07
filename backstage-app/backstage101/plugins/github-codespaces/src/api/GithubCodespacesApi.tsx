@@ -19,7 +19,7 @@ import { createApiRef } from '@backstage/core-plugin-api';
 
 /** @public */
 export const githubCodespacesApiRef = createApiRef<GithubCodespacesApi>({
-    id: 'plugin.githubcodespaces.service',
+    id: 'plugin.github-codespaces.service',
 });
 
 /** 

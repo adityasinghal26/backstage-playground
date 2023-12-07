@@ -10,6 +10,7 @@ import {
   SupportButton,
 } from '@backstage/core-components';
 import { ExampleFetchComponent } from '../ExampleFetchComponent';
+import { GithubCodespacesListCard } from '../Codespaces/GithubCodespacesListCard';
 
 export const ExampleComponent = () => (
   <Page themeId="tool">
@@ -31,6 +32,9 @@ export const ExampleComponent = () => (
         </Grid>
         <Grid item>
           <ExampleFetchComponent />
+        </Grid>
+        <Grid item>
+          <GithubCodespacesListCard />
         </Grid>
       </Grid>
     </Content>

@@ -1,9 +1,17 @@
-import { createPlugin, createRoutableExtension } from '@backstage/core-plugin-api';
+import { configApiRef, createApiFactory, createPlugin, createRoutableExtension, githubAuthApiRef } from '@backstage/core-plugin-api';
 
 import { rootRouteRef } from './routes';
+import { githubCodespacesApiRef, GithubCodespacesApiClient } from './api';
 
 export const githubCodespacesPlugin = createPlugin({
   id: 'github-codespaces',
+  apis: [
+    createApiFactory({
+      api: githubCodespacesApiRef,
+      deps: { configApi: configApiRef , githubAuthApi: githubAuthApiRef },
+      factory: ({ configApi, githubAuthApi }) => new GithubCodespacesApiClient({configApi, githubAuthApi})
+    })
+  ],
   routes: {
     root: rootRouteRef,
   },

@@ -29,6 +29,7 @@ export function useListCodespacesForUser(): {
     const api = useApi(githubCodespacesApiRef);
 
     const { value, loading, error } = useAsync(() => {
+            // const { owner, repo } = getProjectNameFromEntity(entity);
             return api.listCodespacesForUser();
     }, [api]);
 
