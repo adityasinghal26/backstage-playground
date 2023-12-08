@@ -10,7 +10,7 @@ import {
   SupportButton,
 } from '@backstage/core-components';
 import { ExampleFetchComponent } from '../ExampleFetchComponent';
-import { GithubCodespacesListCard } from '../Codespaces/GithubCodespacesListCard';
+import { GithubCodespacesListCard } from '../GithubCodespacesList';
 
 export const ExampleComponent = () => (
   <Page themeId="tool">

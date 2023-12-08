@@ -15,7 +15,6 @@
  */
 
 import { githubCodespacesApiRef } from "../api"; 
-// import { Entity } from "@backstage/catalog-model";
 import { useApi } from "@backstage/core-plugin-api";
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import useAsync from "react-use/lib/useAsync";
@@ -29,7 +28,6 @@ export function useListCodespacesForUser(): {
     const api = useApi(githubCodespacesApiRef);
 
     const { value, loading, error } = useAsync(() => {
-            // const { owner, repo } = getProjectNameFromEntity(entity);
             return api.listCodespacesForUser();
     }, [api]);
 

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { useListCodespacesForUser } from "../../hooks/useListCodespacesForUser";
-import { GithubCodespaceListTable } from "./GithubCodespaceListTable";
+import { useListCodespacesInRepoForUser } from "../../hooks";
+import { GithubCodespaceInRepoListTable } from "./GithubCodespaceInRepoListTable";
+import { useEntity } from "@backstage/plugin-catalog-react";
 import React from "react";
 
 // import { useApi, errorApiRef } from "@backstage/core-plugin-api";
 // import { CodespacesList } from "../../api";
-// import { useEntity } from "@backstage/plugin-catalog-react";
 // import { GITHUB_CODESPACES_ANNOTATION, getProjectNameFromEntity } from "../utils/getProjectNameFromEntity";
 
 /**
@@ -28,14 +28,14 @@ import React from "react";
  * 
  * @public
  */ 
-export const GithubCodespacesListCard = () => {
-    // const { entity } = useEntity();
+export const GithubCodespacesInRepoListCard = () => {
+    const { entity } = useEntity();
     
     // const [owner, repo] = (
     //     entity?.metadata.annotations?.[GITHUB_CODESPACES_ANNOTATION] ?? '/'
     //     .split('/');
     // )
-    const { count, data, loading, error } = useListCodespacesForUser();
+    const { count, data, loading, error } = useListCodespacesInRepoForUser(entity);
 
-    return <GithubCodespaceListTable count={count} list={data} loading={loading} error={error} />;
+    return <GithubCodespaceInRepoListTable count={count} list={data} loading={loading} error={error} />;
 }

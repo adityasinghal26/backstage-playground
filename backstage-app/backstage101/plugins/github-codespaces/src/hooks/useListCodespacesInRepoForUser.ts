@@ -19,7 +19,7 @@ import { githubCodespacesApiRef } from "../api";
 import { useApi } from "@backstage/core-plugin-api";
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import useAsync from "react-use/lib/useAsync";
-import { getProjectNameFromEntity } from "../components/utils/getProjectNameFromEntity";
+import { getProjectNameFromEntity } from "../components/utils";
 
 export function useListCodespacesInRepoForUser(
     entity: Entity,
@@ -32,7 +32,7 @@ export function useListCodespacesInRepoForUser(
     const api = useApi(githubCodespacesApiRef);
 
     const { value, loading, error } = useAsync(() => {
-        const projectName = getProjectNameFromEntity(entity)
+        const projectName = getProjectNameFromEntity(entity);
         const [owner, repository_name] = (projectName ?? '/').split('/');
         return api.listCodespacesInRepoForUser(owner, repository_name);
     }, [api]);
