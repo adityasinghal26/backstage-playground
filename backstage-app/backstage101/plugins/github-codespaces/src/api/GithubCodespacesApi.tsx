@@ -28,6 +28,19 @@ export const githubCodespacesApiRef = createApiRef<GithubCodespacesApi>({
  * @public */
 export type GithubCodespacesApi = {
 
-    listCodespacesForUser: () => Promise<RestEndpointMethodTypes['codespaces']['listForAuthenticatedUser']['response']['data']>
+    getRepositoryDetails: (owner: string, repository_name: string) =>
+        Promise<
+            RestEndpointMethodTypes['repos']['get']['response']['data']
+        >
+
+    listCodespacesForUser: () => 
+        Promise<
+            RestEndpointMethodTypes['codespaces']['listForAuthenticatedUser']['response']['data']
+        >
+
+        listCodespacesInRepoForUser: (owner: string, repository_name: string) =>
+        Promise<
+            RestEndpointMethodTypes['codespaces']['listInRepositoryForAuthenticatedUser']['response']['data']
+        >
 
 };

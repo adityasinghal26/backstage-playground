@@ -55,12 +55,35 @@ export class GithubCodespacesApiClient implements GithubCodespacesApi {
         return new Octokit({ auth: token, baseUrl });
       }
 
+    async getRepositoryDetails(owner: string, repository_name: string): Promise<
+        RestEndpointMethodTypes['repos']['get']['response']['data']
+    > {
+        const octokit = await this.getOctokit('github.com')
+        const response = await octokit.rest.repos.get({
+            owner: owner,
+            repo: repository_name,
+        })
+
+        return response.data
+    }
+
     async listCodespacesForUser(): Promise<
         RestEndpointMethodTypes['codespaces']['listForAuthenticatedUser']['response']['data']
     > {
                
         const octokit = await this.getOctokit('github.com')
         const response = await octokit.rest.codespaces.listForAuthenticatedUser()
+        return response.data
+    };
+
+    async listCodespacesInRepoForUser(owner: string, repository_name: string): Promise<
+        RestEndpointMethodTypes['codespaces']['listInRepositoryForAuthenticatedUser']['response']['data']
+    > {
+        const octokit = await this.getOctokit('github.com')
+        const response = await octokit.rest.codespaces.listInRepositoryForAuthenticatedUser({
+            owner: owner,
+            repo: repository_name,
+        })
         return response.data
     };
 
