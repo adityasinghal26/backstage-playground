@@ -67,6 +67,7 @@ import {
   isAzureDevOpsAvailable,
 } from '@backstage/plugin-azure-devops';
 import { MSFormContent, hasMSFormsAnnotation } from '@zcmander/backstage-plugin-msforms';
+import { GithubCodespacesInRepoListCard } from '@internal/plugin-github-codespaces/src/components/Codespaces/GithubCodespacesInRepoListCard';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -74,6 +75,10 @@ const techdocsContent = (
       <ReportIssue />
     </TechDocsAddons>
   </EntityTechdocsContent>
+);
+
+const githubCodespacesRepoContent = (
+  <GithubCodespacesInRepoListCard />
 );
 
 const ArgoCdContent = (
@@ -162,6 +167,9 @@ const overviewContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
+    <Grid item md={4} xs={12}>
+      { githubCodespacesRepoContent }
+    </Grid>
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
     </Grid>

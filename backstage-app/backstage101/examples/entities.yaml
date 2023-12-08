@@ -15,6 +15,7 @@ metadata:
   annotations:
     forms.office.com/feedback: <microsoft-office-form-complete-url>
     argocd/app-name: your-app-name
+    github.com/project-slug: adityasinghal26/backstage-playground
 spec:
   type: website
   lifecycle: experimental
