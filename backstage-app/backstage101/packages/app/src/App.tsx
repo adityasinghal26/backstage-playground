@@ -36,7 +36,8 @@ import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/
 
 import { githubAuthApiRef } from '@backstage/core-plugin-api';
 import { SignInPage } from '@backstage/core-components';
-import { GithubCodespacesPage } from '@internal/plugin-github-codespaces';
+// import { GithubCodespacesPage } from '@internal/plugin-github-codespaces';
+import { GithubCodespacesPage } from '@internal/plugin-github-codespace';
 
 const app = createApp({
   components: {

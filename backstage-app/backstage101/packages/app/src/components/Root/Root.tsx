@@ -23,6 +23,7 @@ import {
   SidebarSpace,
   useSidebarOpenState,
   Link,
+  GitHubIcon,
 } from '@backstage/core-components';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -73,6 +74,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
         <SidebarDivider />
         <SidebarScrollWrapper>
           <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
+          <SidebarItem icon={GitHubIcon} to="github-codespaces" text="Codespaces" />
         </SidebarScrollWrapper>
       </SidebarGroup>
       <SidebarSpace />
