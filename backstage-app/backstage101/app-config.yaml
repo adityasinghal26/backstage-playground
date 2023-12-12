@@ -1,6 +1,6 @@
 app:
   title: Scaffolded Backstage App
-  baseUrl: http://localhost:3000
+  baseUrl: https://verbose-trout-4jj9jq4prq9h5vx-8000.app.github.dev
 
 organization:
   name: My Company
@@ -81,6 +81,17 @@ proxy:
     pathRewrite:
       '/api/proxy/jhipster/': '/'
   #   changeOrigin: true
+  '/sonarqube':
+    target: http://k8s-alb-sonarqube-dev-756770070.ap-south-1.elb.amazonaws.com:8000/api
+    pathRewrite:
+      '/api/proxy/sonarqube/': '/'
+    allowedMethods: ['GET']
+    auth: "${SONARQUBE_TOKEN}:"
+
+sonarqube:
+  baseUrl: http://k8s-alb-sonarqube-dev-756770070.ap-south-1.elb.amazonaws.com:8000
+  apiKey: ${SONARQUBE_TOKEN}
+
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -119,8 +130,8 @@ auth:
   providers:
     github:
       production:
-        clientId: github-oauth-client-id
-        clientSecret: github-oauth-client-secret
+        clientId: 0b599034d7b92f2ededb
+        clientSecret: 026d47c3c6d6a1f8cad55a578ac576e8dd535e78
 
 
 scaffolder:
@@ -136,6 +147,11 @@ catalog:
     # Local example data, file locations are relative to the backend process, typically `packages/backend`
     - type: file
       target: ../../examples/entities.yaml
+
+    - type: file
+      target: ../../examples/org.yaml
+      rules:
+        - allow: [Group, User, Location]
 
     - type: file
       target: ../../examples/backstage-info.yaml

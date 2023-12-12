@@ -4,7 +4,6 @@ IMAGE_REG="localhost:5001"
 IMAGE_REP="backstage"
 
 # Build docker image with the latest build backend artefacts
-cd $CODESPACE_VSCODE_FOLDER
 docker image build backstage-app/backstage101/ -f deployment/kubernetes/backstage/docker/Dockerfile --tag $IMAGE_REG/$IMAGE_REP:$BUILD_TAG
 
 # Push the latest docker image to local image registry

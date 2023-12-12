@@ -87,4 +87,14 @@ export class GithubCodespacesApiClient implements GithubCodespacesApi {
         return response.data
     };
 
+    async startCodespaceForUser(codespace_name: string): Promise<
+        RestEndpointMethodTypes['codespaces']['startForAuthenticatedUser']['response']['data']
+    > {
+        const octokit = await this.getOctokit('github.com')
+        const response = await octokit.rest.codespaces.startForAuthenticatedUser({
+            codespace_name: codespace_name,
+        })
+        return response.data
+    }
+
 };

@@ -49,7 +49,7 @@ export default async function createPlugin(
 
             // Next we verify the email domain. It is recommended to include this
             // kind of check if you don't look up the user in an external service.
-            if (domain !== 'domain.com') {
+            if (domain !== 'gmail.com') {
               throw new Error(
                 `Login failed, this email ${email} does not belong to the expected domain`,
               );
