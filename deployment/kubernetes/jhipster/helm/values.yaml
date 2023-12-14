@@ -25,4 +25,5 @@ mysql:
   host: 'mysql.mysql.svc.cluster.local'
   port: '3306'
   database: 'jhipster-online'
+  username: 'root'
   password: ''
