@@ -43,17 +43,12 @@ export function useOpenCodespaceInEntityForUser(
         )
 
         const count = verifiedCodespaces.length;
-        // const codespaceName = (count === 0) ? 
-        //     ((await api.createCodespaceInEntityForUser(entityName,owner,repositoryName)).name) :
-        //     (verifiedCodespaces[0].name);
 
         return (
             (count === 0) ?
             ((await api.createCodespaceInEntityForUser(entityName,owner,repositoryName))) :
             api.startCodespaceForUser(verifiedCodespaces[0].name)
         );
-        
-        // return api.startCodespaceForUser(codespaceName);     
     },[api, entity])
 
     // const { value, loading, error } = useAsync(() => startCodespace(), [api, entity]);
