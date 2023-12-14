@@ -18,6 +18,7 @@ import { GitHubIcon, ResponseErrorPanel, Table, TableColumn } from "@backstage/c
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import React from "react";
 import { Box } from "@material-ui/core";
+import { Codespace } from "../../api";
 
 const columns: TableColumn[] = [
     {
@@ -31,6 +32,23 @@ const columns: TableColumn[] = [
         field: 'name',
         width: 'auto',
     },
+    {
+        title: 'Repository',
+        field: 'repository',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => row.repository?.full_name,
+    },
+    {
+        title: 'Status',
+        field: 'status',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => row.state,
+    },
+    {
+        title: 'Created At',
+        field: 'created_at',
+        width: 'auto',
+    }
 ];
 
 type GithubCodespaceListTableProps = {

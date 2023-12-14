@@ -40,9 +40,17 @@ export type CodespaceProperties = {
 }
 
 export type Codespace = {
-    title: string;
-    description: string;
-    properties: CodespaceProperties;
+    id: number;
+    name: string;
+    display_name?: string, 
+    repository: Repository,
+    created_at: string,
+    updated_at: string,
+    idle_timeout_minutes?: number,
+    state: CodespaceState,
+    start_url: string,
+    stop_url: string,
+    web_url: string,
 }
 
 export type CodespacesList = {
