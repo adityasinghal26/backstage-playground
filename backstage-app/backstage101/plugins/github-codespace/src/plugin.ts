@@ -30,35 +30,16 @@ export const EntityGithubCodespacesContent = githubCodespacesPlugin.provide(
   createRoutableExtension({
     name: 'EntityGithubCodespacesContent',
     component: () => 
-      import('./components/GithubCodespacesEntityTab').then(m => m.GithubCodespaceEntityContent),
+      import('./components/GithubCodespacesEntityContent').then(m => m.GithubCodespaceEntityContent),
     mountPoint: rootRouteRef,
   }),
 );
 
-
-export const GithubCodespacesPageExample = githubCodespacesPlugin.provide(
+export const GithubCodespacesPageList = githubCodespacesPlugin.provide(
   createRoutableExtension({
-    name: 'GithubCodespacesPageExample',
-    component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
-    mountPoint: rootRouteRef,
-  }),
-);
-
-export const GithubCodespacesListCard = githubCodespacesPlugin.provide(
-  createRoutableExtension({
-    name: 'GithubCodespacesListCard',
+    name: 'GithubCodespacesPageList',
     component: () => 
-      import('./components/GithubCodespacesList').then(m => m.GithubCodespacesListCard),
-    mountPoint: rootRouteRef,
-  }),
-);
-
-export const GithubCodespacesInRepoListCard = githubCodespacesPlugin.provide(
-  createRoutableExtension({
-    name: 'GithubCodespacesInRepoListCard',
-    component: () => 
-      import('./components/GithubCodespacesInRepoList').then(m => m.GithubCodespacesInRepoListCard),
+      import('./components/GithubCodespacesPage').then(m => m.GithubCodespacesPageComponent),
     mountPoint: rootRouteRef,
   }),
 );
