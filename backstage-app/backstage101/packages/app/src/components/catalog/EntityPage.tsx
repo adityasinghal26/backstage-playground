@@ -67,7 +67,7 @@ import {
   isAzureDevOpsAvailable,
 } from '@backstage/plugin-azure-devops';
 import { MSFormContent, hasMSFormsAnnotation } from '@zcmander/backstage-plugin-msforms';
-import { GithubCodespacesEntityCard, EntityGithubCodespacesContent } from '@internal/plugin-github-codespace';
+import { EntityGithubCodespacesCard, EntityGithubCodespacesContent } from '@internal/plugin-github-codespace';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -82,7 +82,7 @@ const githubCodespacesRepoContent = (
 );
 
 const githubCodespacesEntityContent = (
-  <GithubCodespacesEntityCard />
+  <EntityGithubCodespacesCard />
 );
 
 const ArgoCdContent = (

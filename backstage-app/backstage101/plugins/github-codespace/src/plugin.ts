@@ -44,9 +44,9 @@ export const GithubCodespacesPageList = githubCodespacesPlugin.provide(
   }),
 );
 
-export const GithubCodespacesEntityCard = githubCodespacesPlugin.provide(
+export const EntityGithubCodespacesCard = githubCodespacesPlugin.provide(
   createRoutableExtension({
-    name: 'GithubCodespacesEntityCard',
+    name: 'EntityGithubCodespacesCard',
     component: () => 
       import('./components/GithubCodespacesEntityCard').then(m => m.GithubCodespacesEntityCard),
     mountPoint: rootRouteRef,

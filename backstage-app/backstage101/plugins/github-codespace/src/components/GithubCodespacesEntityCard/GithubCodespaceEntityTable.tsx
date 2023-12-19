@@ -18,29 +18,39 @@ import { ResponseErrorPanel, Table, TableColumn } from "@backstage/core-componen
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import React from "react";
 import { Box } from "@material-ui/core";
+import { Codespace } from "../../api";
+import { booleanIndicator } from "../utils";
 
 const columns: TableColumn[] = [
     {
-        title: 'ID',
-        field: 'id',
-        highlight: false,
+        title: 'Name',
+        field: 'display_name',
         width: 'auto',
     },
     {
-        title: 'Codespace',
-        field: 'name',
+        title: 'Reference',
+        field: 'reference',
         width: 'auto',
+        render: (row: Partial<Codespace>) => row.git_status?.ref,
     },
+    {
+        title: 'Uncommitted Changes',
+        field: 'uncommitted_changes',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => booleanIndicator({
+            status: row.git_status?.has_uncommitted_changes,
+        }),
+    }
 ];
 
-type GithubCodespaceEntityListTableProps = {
+type GithubCodespaceEntityTableProps = {
     count?: number;
     list?: RestEndpointMethodTypes['codespaces']['listInRepositoryForAuthenticatedUser']['response']['data']['codespaces'];
     loading: boolean;
     error?: Error;
 }
 
-export const GithubCodespaceEntityListTable = ({ count, list, loading, error}: GithubCodespaceEntityListTableProps) => {
+export const GithubCodespaceEntityTable = ({ count, list, loading, error}: GithubCodespaceEntityTableProps) => {
     if (error) {
         return (
             <div>
@@ -65,7 +75,7 @@ export const GithubCodespaceEntityListTable = ({ count, list, loading, error}: G
                 <Box display="flex" alignItems="center" fontSize={24}>
                     {/* <GitHubIcon/> */}
                     {/* <Box mr={1} /> */}
-                    List (filtered with Entity) ({count})
+                    Codespace Details - Count ({count})
                 </Box>
             }
             data={list ?? []}

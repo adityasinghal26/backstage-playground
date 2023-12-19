@@ -28,6 +28,13 @@ export type Repository = {
     html_url: string;
 }
 
+export type GitStatus = {
+    ahead?: number;
+    behind?: number;
+    has_uncommitted_changes?: boolean;
+    ref?: string;
+}
+
 export type CodespaceProperties = {
     id: number;
     name: string;
@@ -44,6 +51,7 @@ export type Codespace = {
     name: string;
     display_name?: string, 
     repository: Repository,
+    git_status: GitStatus,
     created_at: string,
     updated_at: string,
     idle_timeout_minutes?: number,

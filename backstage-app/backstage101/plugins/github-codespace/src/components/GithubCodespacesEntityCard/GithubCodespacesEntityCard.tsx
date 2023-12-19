@@ -21,7 +21,7 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import { Card, CardContent, CardHeader, Divider, IconButton, makeStyles } from "@material-ui/core";
 import { useOpenCodespaceInEntityForUser } from "../../hooks/useOpenCodespaceInEntityForUser";
 import { useListCodespaceswithEntityForUser } from "../../hooks";
-import { GithubCodespaceEntityListTable } from "./GithubCodespaceEntityTable";
+import { GithubCodespaceEntityTable } from "./GithubCodespaceEntityTable";
 
 const useStyles = makeStyles({
   gridItemCard: {
@@ -45,44 +45,33 @@ const useStyles = makeStyles({
 
 
 /**
- * A Backstage Card to list the Codespaces for the Authenticated User
+ * A Backstage Card to create/start the Codespaces for the Authenticated User
+ * dedicated for the particular entity (with the same display name) 
  * 
  * @public
  */
 export const GithubCodespacesEntityCard = () => {
   const { entity } = useEntity();
-
-  // const [owner, repo] = (
-  //     entity?.metadata.annotations?.[GITHUB_CODESPACES_ANNOTATION] ?? '/'
-  //     .split('/');
-  // )
+  const classes = useStyles();
+  
   const { startCodespace } = useOpenCodespaceInEntityForUser(entity);
   const { count, data, loading, error } = useListCodespaceswithEntityForUser(entity);
-  const classes = useStyles();
 
-  // const openInCodespace: IconLinkVerticalProps = {
-  //   label: 'Open in Codespace',
-  //   // disabled: !entitySourceLocation,
-  //   icon: <GitHubIcon/>,
-  //   // href: entitySourceLocation?.locationTargetUrl,
-  //   // onClick: useOpenCodespaceInEntityForUser(entity),
-  // };
   const openInNewTab = (url: string) => {
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
     if (newWindow) newWindow.opener = null
   }
 
-
   return (
     <Card className={classes.gridItemCard}>
       <CardHeader
         title="GitHub Codespaces"
-        // subheader="GitHub Codespace for the entity"
+        subheader="Start Codespace (dedicated for the entity)"
         action={
           <>
             <IconButton
               aria-label="Start"
-              title="Open Codespace"
+              title="Start Codespace"
               onClick={() => startCodespace().then((result) => {
                 return openInNewTab(result.web_url);
               })}
@@ -93,8 +82,8 @@ export const GithubCodespacesEntityCard = () => {
         }
       />
       <Divider />
-      <CardContent className={classes.gridItemCard}>
-        <GithubCodespaceEntityListTable count={count} list={data} loading={loading} error={error} />
+      <CardContent className={classes.gridItemCardContent}>
+        <GithubCodespaceEntityTable count={count} list={data} loading={loading} error={error} />
       </CardContent>
     </Card>
     // <Box display="flex" alignItems="center" justifyContent="center" mb={1}>

@@ -15,3 +15,4 @@
  */
 
 export * from './getProjectNameFromEntity';
+export * from './getBooleanIndicator';
