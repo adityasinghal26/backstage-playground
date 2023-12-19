@@ -67,7 +67,7 @@ import {
   isAzureDevOpsAvailable,
 } from '@backstage/plugin-azure-devops';
 import { MSFormContent, hasMSFormsAnnotation } from '@zcmander/backstage-plugin-msforms';
-import { GithubCodespacesInRepoListCard } from '@internal/plugin-github-codespace';
+import { GithubCodespacesEntityCard, EntityGithubCodespacesContent } from '@internal/plugin-github-codespace';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -78,7 +78,11 @@ const techdocsContent = (
 );
 
 const githubCodespacesRepoContent = (
-  <GithubCodespacesInRepoListCard />
+  <EntityGithubCodespacesContent />
+);
+
+const githubCodespacesEntityContent = (
+  <GithubCodespacesEntityCard />
 );
 
 const ArgoCdContent = (
@@ -168,7 +172,7 @@ const overviewContent = (
       </EntitySwitch.Case>
     </EntitySwitch>
     <Grid item md={6} xs={12}>
-      { githubCodespacesRepoContent }
+      { githubCodespacesEntityContent}
     </Grid>
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
@@ -245,6 +249,10 @@ const websiteEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/codespaces" title="Codespaces">
+      { githubCodespacesRepoContent }
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/argoCd" title="ArgoCd">

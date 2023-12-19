@@ -21,7 +21,7 @@ import { RestEndpointMethodTypes } from "@octokit/rest";
 import useAsync from "react-use/lib/useAsync";
 import { getProjectNameFromEntity } from "../components/utils";
 
-export function useListCodespacesInRepoForUser(
+export function useListCodespaceswithEntityForUser(
     entity: Entity,
 ): {
     count?: RestEndpointMethodTypes['codespaces']['listInRepositoryForAuthenticatedUser']['response']['data']['total_count'];
@@ -30,6 +30,7 @@ export function useListCodespacesInRepoForUser(
     error?: Error;
 } {
     const api = useApi(githubCodespacesApiRef);
+    const entity_name = entity.metadata.name;
 
     const { value, loading, error } = useAsync(() => {
         const projectName = getProjectNameFromEntity(entity);
@@ -37,9 +38,17 @@ export function useListCodespacesInRepoForUser(
         return api.listCodespacesInRepoForUser(owner, repository_name);
     }, [api]);
 
+    const verifyCodespaceNameWithEntity = (entityName: string, codespaceName: any) => {
+        return (codespaceName.toLowerCase().indexOf(entityName.toLowerCase()) >= 0);
+    }
+
+    const verifiedCodespaces = value?.codespaces.filter((codespace) =>
+        verifyCodespaceNameWithEntity(entity_name, codespace.display_name)
+    )
+
     return {
-        count: value?.total_count,
-        data: value?.codespaces,
+        count: verifiedCodespaces?.length,
+        data: verifiedCodespaces,
         loading,
         error,
     };

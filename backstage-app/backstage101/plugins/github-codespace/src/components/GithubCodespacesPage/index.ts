@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export * from './useListCodespacesForUser';
-export * from './useListCodespacesInRepoForUser';
-export * from './useListCodespaceswithEntityForUser';
+export * from './GithubCodespacesPageTable';
+export * from './GithubCodespacesPageComponent';
+export * from './GithubCodespacesPage';

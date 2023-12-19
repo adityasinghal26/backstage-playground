@@ -1,1 +1,1 @@
-export { githubCodespacesPlugin, GithubCodespacesPage, GithubCodespacesListCard, GithubCodespacesInRepoListCard } from './plugin';
+export { githubCodespacesPlugin, GithubCodespacesPage, EntityGithubCodespacesContent, GithubCodespacesListCard, GithubCodespacesInRepoListCard, GithubCodespacesEntityCard } from './plugin';
