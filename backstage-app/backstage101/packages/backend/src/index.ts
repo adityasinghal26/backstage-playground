@@ -34,6 +34,8 @@ import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import todo from './plugins/todo';
+import sonarqube from './plugins/sonarqube';
+
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
@@ -91,6 +93,7 @@ async function main() {
   const todoEnv = useHotMemoize(module, () => createEnv('todo'));
   const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
   const azureDevOpsEnv = useHotMemoize(module, () => createEnv('azure-devops'));
+  const sonarqubeEnv = useHotMemoize(module, () => createEnv('sonarqube'));
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -102,6 +105,8 @@ async function main() {
   apiRouter.use('/todo', await todo(todoEnv));
   apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
   apiRouter.use('/azure-devops', await azureDevOps(azureDevOpsEnv));
+  apiRouter.use('/sonarqube', await sonarqube(sonarqubeEnv));
+
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());

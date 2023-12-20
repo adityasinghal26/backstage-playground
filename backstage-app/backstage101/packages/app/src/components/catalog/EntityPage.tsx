@@ -67,6 +67,8 @@ import {
   isAzureDevOpsAvailable,
 } from '@backstage/plugin-azure-devops';
 import { MSFormContent, hasMSFormsAnnotation } from '@zcmander/backstage-plugin-msforms';
+import { EntitySonarQubeCard, EntitySonarQubeContentPage } from '@backstage/plugin-sonarqube';
+import { isSonarQubeAvailable } from '@backstage/plugin-sonarqube-react';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -81,6 +83,16 @@ const ArgoCdContent = (
       <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
         <Grid item sm={12}>
           <EntityArgoCDContent />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+);
+
+const SonarQubeContent = (
+  <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isSonarQubeAvailable(e))}>
+        <Grid item sm={12}>
+          <EntitySonarQubeContentPage />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
@@ -162,7 +174,14 @@ const overviewContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
-    <Grid item md={4} xs={12}>
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isSonarQubeAvailable(e))}>
+        <Grid item md={6}>
+          <EntitySonarQubeCard variant="gridItem" />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <Grid item md={6} xs={12}>
       <EntityLinksCard />
     </Grid>
     <Grid item md={8} xs={12}>
@@ -214,6 +233,10 @@ const serviceEntityPage = (
           <EntityDependsOnResourcesCard variant="gridItem" />
         </Grid>
       </Grid>
+    </EntityLayout.Route>
+
+    <EntityLayout.Route if={isSonarQubeAvailable} path="/code-quality" title="SonarQube">
+      {SonarQubeContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
