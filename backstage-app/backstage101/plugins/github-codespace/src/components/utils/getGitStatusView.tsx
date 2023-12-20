@@ -14,7 +14,28 @@
  * limitations under the License.
  */
 
-export * from './getProjectNameFromEntity';
-export * from './getBooleanIndicator';
-export * from './getCodespaceState';
-export * from './getGitStatusView';
+import React from "react";
+
+export const getGitStatus = (props: {
+    ahead?: number;
+    behind?: number;
+}) => {
+    return (
+      <>
+        {getGitStatusView(props)}
+      </>
+    );
+  };
+
+  export function getGitStatusView({
+    ahead,
+    behind
+  }: {
+    ahead?: number;
+    behind?: number;
+  }) {
+    if (ahead === undefined || behind === undefined) return null;
+    const answer = `${ahead}/${behind}`;
+    return answer;
+  }
+  
