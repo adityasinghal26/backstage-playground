@@ -66,7 +66,7 @@ export const GithubCodespacesEntityCard = () => {
     <Card className={classes.gridItemCard}>
       <CardHeader
         title="GitHub Codespaces"
-        subheader="Start Codespace (dedicated for the entity)"
+        subheader="Start Codespace (dedicated for the component)"
         action={
           <>
             <IconButton

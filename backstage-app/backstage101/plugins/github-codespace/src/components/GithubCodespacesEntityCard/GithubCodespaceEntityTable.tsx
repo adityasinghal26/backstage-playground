@@ -28,14 +28,14 @@ const columns: TableColumn[] = [
         width: 'auto',
     },
     {
-        title: 'Reference',
-        field: 'reference',
+        title: 'Branch',
+        field: 'branch',
         width: 'auto',
         render: (row: Partial<Codespace>) => row.git_status?.ref,
     },
     {
-        title: 'Uncommitted Changes',
-        field: 'uncommitted_changes',
+        title: 'Uncommitted',
+        field: 'uncommitted',
         width: 'auto',
         render: (row: Partial<Codespace>) => booleanIndicator({
             status: row.git_status?.has_uncommitted_changes,
