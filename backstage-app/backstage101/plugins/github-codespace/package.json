@@ -33,6 +33,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.61",
     "@octokit/rest": "^20.0.2",
+    "luxon": "^3.4.4",
     "react-use": "^17.2.4"
   },
   "peerDependencies": {

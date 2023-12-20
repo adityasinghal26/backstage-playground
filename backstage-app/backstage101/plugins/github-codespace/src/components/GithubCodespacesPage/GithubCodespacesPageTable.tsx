@@ -19,14 +19,10 @@ import { RestEndpointMethodTypes } from "@octokit/rest";
 import React from "react";
 import { Box } from "@material-ui/core";
 import { Codespace } from "../../api";
+import { booleanIndicator, codespaceState } from "../utils";
+import { DateTime } from "luxon";
 
 const columns: TableColumn[] = [
-    {
-        title: 'ID',
-        field: 'id',
-        highlight: false,
-        width: 'auto',
-    },
     {
         title: 'Codespace',
         field: 'name',
@@ -39,15 +35,36 @@ const columns: TableColumn[] = [
         render: (row: Partial<Codespace>) => row.repository?.full_name,
     },
     {
-        title: 'Status',
-        field: 'status',
+        title: 'Branch',
+        field: 'branch',
         width: 'auto',
-        render: (row: Partial<Codespace>) => row.state,
+        render: (row: Partial<Codespace>) => row.git_status?.ref,
     },
     {
-        title: 'Created At',
-        field: 'created_at',
+        title: 'Uncommitted',
+        field: 'uncommitted',
         width: 'auto',
+        render: (row: Partial<Codespace>) => booleanIndicator({
+            status: row.git_status?.has_uncommitted_changes,
+        }),
+    },
+    {
+        title: 'State',
+        field: 'state',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => codespaceState({
+            status: row.state,
+        }),
+    },
+    {
+        title: 'Age',
+        field: 'age',
+        width: 'auto',
+        render: (row: Partial<Codespace>) =>
+      (row.created_at
+        ? DateTime.fromISO(row.created_at)
+        : DateTime.now()
+      ).toRelative(),
     }
 ];
 

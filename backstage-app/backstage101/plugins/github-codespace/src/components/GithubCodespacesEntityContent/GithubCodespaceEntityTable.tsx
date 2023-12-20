@@ -18,19 +18,57 @@ import { GitHubIcon, ResponseErrorPanel, Table, TableColumn } from "@backstage/c
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import React from "react";
 import { Box } from "@material-ui/core";
+import { Codespace } from "../../api";
+import { booleanIndicator, codespaceState, getGitStatusView } from "../utils";
+import { DateTime } from "luxon";
 
 const columns: TableColumn[] = [
-    {
-        title: 'ID',
-        field: 'id',
-        highlight: false,
-        width: 'auto',
-    },
     {
         title: 'Codespace',
         field: 'name',
         width: 'auto',
     },
+    {
+        title: 'Branch',
+        field: 'branch',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => row.git_status?.ref,
+    },
+    {
+        title: 'Uncommitted',
+        field: 'uncommitted',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => booleanIndicator({
+            status: row.git_status?.has_uncommitted_changes,
+        }),
+    },
+    {
+        title: 'Ahead/Behind',
+        field: 'git_status',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => getGitStatusView({
+            ahead: row.git_status?.ahead,
+            behind: row.git_status?.behind,
+        })
+    },
+    {
+        title: 'State',
+        field: 'state',
+        width: 'auto',
+        render: (row: Partial<Codespace>) => codespaceState({
+            status: row.state,
+        }),
+    },
+    {
+        title: 'Age',
+        field: 'age',
+        width: 'auto',
+        render: (row: Partial<Codespace>) =>
+      (row.created_at
+        ? DateTime.fromISO(row.created_at)
+        : DateTime.now()
+      ).toRelative(),
+    }
 ];
 
 type GithubCodespaceEntityTableProps = {
