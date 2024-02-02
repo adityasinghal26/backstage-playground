@@ -23,9 +23,10 @@ secrets:
   backstage: 'backstage-secrets'
   postgres: 'postgres-secrets'
   ghToken: 'dummy'
-  azToken: 'dummy'
+  azToken: '5cmgsxwylshuw55gj427xghbgtw3j6lrmjvymggsq7xhaecexwjq'
+  sqToken: 'squ_3c8ab61789a3d641bbec5598c8c9aad43e80f48d'
   argocdToken: 'argocd.token=token-value'
-  backendUrl: 'https://adityasinghal26-devcontainer-name-8000.preview.app.github.dev'
+  backendUrl: 'https://verbose-trout-4jj9jq4prq9h5vx-8000.app.github.dev'
   incluster:
     token: 'incluster-sa-b64-encoded-token'
   cluster1:

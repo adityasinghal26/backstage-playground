@@ -45,6 +45,7 @@ const app = createApp({
         {...props}
         align='center'
         providers={[
+          'guest',
           {
             id: 'github-auth-provider',
             title: 'GitHub',
@@ -79,7 +80,7 @@ const app = createApp({
 const routes = (
   <FlatRoutes>
     <Route path="/" element={<Navigate to="catalog" />} />
-    <Route path="/catalog" element={<CatalogIndexPage />} />
+    <Route path="/catalog" element={<CatalogIndexPage initialKind='system' initiallySelectedFilter="starred" ownerPickerMode='all'/>} />
     <Route
       path="/catalog/:namespace/:kind/:name"
       element={<CatalogEntityPage />}

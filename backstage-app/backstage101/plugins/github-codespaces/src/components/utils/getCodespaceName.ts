@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
-export * from './useListCodespacesForUser';
-export * from './useListCodespacesInRepoForUser';
-export * from './useStartCodespaceForUser';
+// import { Entity } from "@backstage/catalog-model"
+// import { useListCodespacesInRepoForUser } from "../../hooks"
+
+// export const getCodespaceName = () => {
+//     const entity = useEntity();
+//     const {count, data, loading, error } = useListCodespacesInRepoForUser(entity)
+
+//     return data
+// }

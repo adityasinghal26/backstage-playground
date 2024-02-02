@@ -38,9 +38,13 @@ export type GithubCodespacesApi = {
             RestEndpointMethodTypes['codespaces']['listForAuthenticatedUser']['response']['data']
         >
 
-        listCodespacesInRepoForUser: (owner: string, repository_name: string) =>
+    listCodespacesInRepoForUser: (owner: string, repository_name: string) =>
         Promise<
             RestEndpointMethodTypes['codespaces']['listInRepositoryForAuthenticatedUser']['response']['data']
         >
+
+    startCodespaceForUser: (codespace_name: string) => Promise<
+        RestEndpointMethodTypes['codespaces']['startForAuthenticatedUser']['response']['data']
+    >
 
 };
